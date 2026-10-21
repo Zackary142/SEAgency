@@ -1,5 +1,5 @@
 /* Made-up data for previewing the dashboards before the API is live.
-   Open dashboard.html?preview=customer, customer-empty, engineer or pending.
+   Open dashboard.html?preview=customer, customer-empty, engineer, pending or admin.
    The shapes match what the API routes are expected to return. */
 const SAMPLE = (() => {
   const daysAgo = (d, h = 11, m = 42) => {
@@ -94,5 +94,21 @@ const SAMPLE = (() => {
     me: { displayName: "Alex Morgan", role: "engineer", engineerStatus: "pending" }
   };
 
-  return { customer, "customer-empty": customerEmpty, engineer, pending };
+  const admin = {
+    me: { displayName: "Zack", role: "admin" },
+    engineers: {
+      pending: [
+        { id: "e-alex", displayName: "Alex Morgan", email: "alex@morgan.dev", githubUsername: "alexmorgan", appliedAt: daysAgo(0, 9, 15),
+          application: "Six years building Django and React apps for small retailers. Happy to take on maintenance work and on-call for hosting." },
+        { id: "e-ruth", displayName: "Ruth Adeyemi", email: "ruth@example.com", githubUsername: "ruth-a", appliedAt: daysAgo(2), application: null }
+      ],
+      approved: [
+        { id: "e-priya", displayName: "Priya Shah", email: "priya@example.com", githubUsername: "priya-shah", appliedAt: daysAgo(40), reviewedAt: daysAgo(39) },
+        { id: "e-tom", displayName: "Tom Reid", email: "tom@example.com", githubUsername: "tomreid", appliedAt: daysAgo(70), reviewedAt: daysAgo(68) }
+      ],
+      rejected: []
+    }
+  };
+
+  return { customer, "customer-empty": customerEmpty, engineer, pending, admin };
 })();

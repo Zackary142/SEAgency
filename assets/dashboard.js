@@ -3,7 +3,7 @@
 
 const app = document.getElementById("app");
 const params = new URLSearchParams(location.search);
-const PREVIEWS = { customer: "Customer", "customer-empty": "Customer, no project", engineer: "Engineer", pending: "Engineer, pending" };
+const PREVIEWS = { customer: "Customer", "customer-empty": "Customer, no project", engineer: "Engineer", pending: "Engineer, pending", admin: "Admin" };
 const preview = API.connected ? null : (PREVIEWS[params.get("preview")] ? params.get("preview") : "customer");
 
 /* ---------- data: the API, or sample data in preview ---------- */
@@ -19,6 +19,9 @@ function sampleSource(data) {
     acceptOffer: () => wait({}),
     declineOffer: () => wait({}),
     requestProject: () => wait({}),
+    engineers: status => wait(data.engineers?.[status] || []),
+    approveEngineer: () => wait({}),
+    rejectEngineer: () => wait({}),
     logout: () => wait({})
   };
 }
@@ -281,6 +284,59 @@ function pendingView(me) {
     </div>`;
 }
 
+/* ---------- admin ---------- */
+
+function applicantCard(e) {
+  return `
+    <div class="panel" data-engineer="${esc(e.id)}">
+      <div class="panel-head"><span>github.com/${esc(e.githubUsername)}</span><span class="dim">applied ${when(e.appliedAt)}</span></div>
+      <div class="card-body">
+        <div><h3>${esc(e.displayName)}</h3><span class="sub">${esc(e.email)}</span></div>
+        ${e.application ? `<p class="application">&ldquo;${esc(e.application)}&rdquo;</p>` : `<p class="sub">No note with the application.</p>`}
+        <div class="row-actions">
+          <button class="btn btn-primary btn-small" type="button" data-action="approve" data-id="${esc(e.id)}">Approve</button>
+          <button class="btn btn-quiet btn-small" type="button" data-action="reject" data-id="${esc(e.id)}" data-name="${esc(firstName(e.displayName))}">Reject</button>
+          <a class="btn btn-quiet btn-small" href="https://github.com/${encodeURIComponent(e.githubUsername)}" target="_blank" rel="noopener">GitHub profile</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+function engineerTable(list, rejected) {
+  return `
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Engineer</th><th>GitHub</th><th>Email</th><th>${rejected ? "Rejected" : "Approved"}</th>${rejected ? "<th></th>" : ""}</tr></thead>
+          <tbody>${list.map(e => `<tr data-engineer="${esc(e.id)}"><td>${esc(e.displayName)}</td><td class="code">${esc(e.githubUsername)}</td><td>${esc(e.email)}</td><td>${fullDay(e.reviewedAt)}</td>${rejected
+            ? `<td><button class="btn btn-quiet btn-small" type="button" data-action="approve" data-id="${esc(e.id)}">Approve after all</button></td>` : ""}</tr>`).join("")}</tbody>
+        </table>
+      </div>`;
+}
+
+function adminView(me, pending, approved, rejected) {
+  return `
+    <section class="dash-section">
+      <div class="section-head">
+        <div><span class="eyebrow">Admin</span><h1>Engineers waiting for you</h1>
+        <p>An engineer can't see any project until you approve them. They're emailed either way.</p></div>
+        <span class="mono">${pending.length} waiting</span>
+      </div>
+      ${pending.length ? `<div class="cards">${pending.map(applicantCard).join("")}</div>`
+        : `<p class="empty-note">Nobody is waiting. You get an email when an engineer signs up and confirms their address.</p>`}
+    </section>
+
+    <section class="dash-section">
+      <div class="section-head"><div><span class="eyebrow">Team</span><h2>Approved engineers</h2></div><span class="mono">${approved.length} approved</span></div>
+      ${approved.length ? engineerTable(approved, false) : `<p class="empty-note">Engineers you approve are listed here.</p>`}
+    </section>
+    ${rejected.length ? `
+    <section class="dash-section">
+      <div class="section-head"><div><span class="eyebrow">Rejected</span><h2>Not approved</h2>
+        <p>Applications are deleted six months after rejection.</p></div></div>
+      ${engineerTable(rejected, true)}
+    </section>` : ""}`;
+}
+
 /* ---------- loading ---------- */
 
 function notLive() {
@@ -308,6 +364,12 @@ async function load() {
     }
     const updates = await source.updates(projects[0].id);
     app.innerHTML = previewBar() + customerView(me, projects[0], updates);
+    return;
+  }
+
+  if (me.role === "admin") {
+    const [pending, approved, rejected] = await Promise.all(["pending", "approved", "rejected"].map(source.engineers));
+    app.innerHTML = previewBar() + adminView(me, pending, approved, rejected);
     return;
   }
 
@@ -340,8 +402,15 @@ app.addEventListener("click", async e => {
     return;
   }
 
+  if (action === "reject" && !confirm(`Reject ${el.dataset.name}? They'll get an email saying they weren't approved.`)) return;
+
   el.disabled = true;
   try {
+    if (action === "approve" || action === "reject") {
+      await (action === "approve" ? source.approveEngineer : source.rejectEngineer)(el.dataset.id);
+      if (preview) { el.closest("[data-engineer]").remove(); return; }
+      return load();
+    }
     if (action === "offer") {
       await source.offerSupport(el.dataset.project, "");
       el.textContent = `Offer sent to ${el.dataset.primary}`;

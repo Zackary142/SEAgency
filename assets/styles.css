@@ -250,6 +250,7 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .card-body .last span:first-child{color:var(--faint)}
 .offer{padding:14px 16px;background:var(--band);border:1px solid var(--band-rule);border-radius:3px;display:grid;gap:10px;font-size:.94rem}
 .offer q{color:var(--muted)}
+.application{font-family:var(--mono);font-size:.875rem;line-height:1.6;color:var(--muted);max-width:62ch}
 .row-actions{display:flex;gap:10px;flex-wrap:wrap}
 .empty-note{color:var(--muted);padding:20px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .table-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:6px}
