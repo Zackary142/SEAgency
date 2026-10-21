@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard | ForkLine</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F1312">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/styles.css?v=4">
+<script src="assets/site.config.js?v=4"></script>
+<script src="assets/main.js?v=4" defer></script>
+<script src="assets/api.js?v=4" defer></script>
+<script src="assets/sample-data.js?v=4" defer></script>
+<script src="assets/dashboard.js?v=4" defer></script>
+</head>
+<body data-page="Dashboard">
+<header class="app-top">
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html">
+        <svg viewBox="0 0 22 22" aria-hidden="true"><path d="M6 2v18" stroke="var(--accent)" stroke-width="2.2" fill="none"/><path d="M6 6c0 5 10 3 10 9v5" stroke="var(--branch)" stroke-width="2.2" fill="none"/></svg>
+        <span data-brand>ForkLine</span>
+      </a>
+      <nav aria-label="Account">
+        <span class="who" id="who"></span>
+        <button class="linkish" type="button" id="sign-out">Sign out</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="page" id="app" aria-live="polite">
+    <p class="who">Loading your dashboard&hellip;</p>
+  </div>
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <span>&copy; <span id="year">2026</span> <span data-brand>ForkLine</span></span>
+    <nav aria-label="Footer"><a href="privacy.html">Privacy notice</a><a href="index.html#contact">Contact</a></nav>
+  </div>
+</footer>
+</body>
+</html>
