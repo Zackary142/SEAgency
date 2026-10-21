@@ -84,9 +84,9 @@ const SAMPLE = (() => {
       { id: "p-okafor-fix", repo: { fullName: "okafor/website-fixes" }, client: "Okafor Joinery", myRole: "primary", releaseTag: "v1.3.2", closedAt: "2026-07-28" }
     ],
     colleagues: [
-      { id: "p-harbour-api", repo: "harbour/fleet-api", stack: "Node · PostgreSQL · AWS", primary: "Zack", helpWanted: "Wants help with the Terraform for staging", offerStatus: null },
-      { id: "p-ledger", repo: "brightledger/ledger-sync", stack: "TypeScript · Stripe", primary: "Tom Reid", helpWanted: "Open to help on webhooks", offerStatus: "pending" },
-      { id: "p-meadow", repo: "meadow/patient-portal", stack: "React · Azure", primary: "Zack", helpWanted: null, offerStatus: null }
+      { id: "p-harbour-api", stack: "Node · PostgreSQL · AWS", primary: "Zack", helpWanted: "Wants help with the Terraform for staging", offerStatus: null },
+      { id: "p-ledger", stack: "TypeScript · Stripe", primary: "Tom Reid", helpWanted: "Open to help on webhooks", offerStatus: "pending" },
+      { id: "p-meadow", stack: "React · Azure", primary: "Zack", helpWanted: null, offerStatus: null }
     ]
   };
 
@@ -96,6 +96,20 @@ const SAMPLE = (() => {
 
   const admin = {
     me: { displayName: "Zack", role: "admin" },
+    requests: [
+      { id: "r-okafor", createdAt: daysAgo(0, 8, 50), customer: { displayName: "Sam Okafor", companyName: "Okafor Joinery" },
+        summary: "Customers should be able to get a quote for a fitted wardrobe online and pay a deposit. We use Xero for invoices." },
+      { id: "r-lena", createdAt: daysAgo(3), customer: { displayName: "Lena Brooks", companyName: null },
+        summary: "My Shopify store is slow and I think the theme is the problem. Can someone take a look?" }
+    ],
+    allProjects: [
+      { id: "p-northgate", name: "Online booking for Northgate Dental", customer: { displayName: "Hannah Cole", companyName: "Northgate Dental" },
+        primary: { displayName: "Zack" }, secondaries: 1, status: "active", createdAt: daysAgo(34) },
+      { id: "p-ledger", name: "Ledger sync", customer: { displayName: "Owen Price", companyName: "Bright Ledger" },
+        primary: { displayName: "Tom Reid" }, secondaries: 0, status: "paused", createdAt: daysAgo(61) },
+      { id: "p-harbour", name: "Harbour Coffee loyalty app", customer: { displayName: "Mia Lewis", companyName: "Harbour Coffee" },
+        primary: { displayName: "Priya Shah" }, secondaries: 1, status: "closed", createdAt: daysAgo(150) }
+    ],
     engineers: {
       pending: [
         { id: "e-alex", displayName: "Alex Morgan", email: "alex@morgan.dev", githubUsername: "alexmorgan", appliedAt: daysAgo(0, 9, 15),

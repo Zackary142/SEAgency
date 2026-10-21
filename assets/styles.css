@@ -226,6 +226,7 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .side-block .eyebrow{color:var(--band-muted)}
 .person{display:grid;gap:2px}
 .person b{font-weight:600}
+.person .clamp{font-weight:500;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .person span,.side-block p{font-size:.94rem;color:var(--muted)}
 .side-links{display:grid;gap:10px;font-size:.94rem}
 .steps-sm{margin:0;padding:0;list-style:none;display:grid;gap:12px;font-size:.94rem}
@@ -250,6 +251,9 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .card-body .last span:first-child{color:var(--faint)}
 .offer{padding:14px 16px;background:var(--band);border:1px solid var(--band-rule);border-radius:3px;display:grid;gap:10px;font-size:.94rem}
 .offer q{color:var(--muted)}
+.start-form{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-top:6px;border-top:1px solid var(--rule)}
+.status-select{padding:6px 10px;font-size:.88rem;width:auto}
+.table-wrap td.strong{color:var(--ink)}
 .application{font-family:var(--mono);font-size:.875rem;line-height:1.6;color:var(--muted);max-width:62ch}
 .row-actions{display:flex;gap:10px;flex-wrap:wrap}
 .empty-note{color:var(--muted);padding:20px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
