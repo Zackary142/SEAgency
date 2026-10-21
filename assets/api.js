@@ -38,6 +38,10 @@ const API = (() => {
     offerSupport: (projectId, message) => request("POST", `/projects/${projectId}/support-offers`, { message }),
     acceptOffer: (projectId, offerId) => request("POST", `/projects/${projectId}/support-offers/${offerId}/accept`),
     declineOffer: (projectId, offerId) => request("POST", `/projects/${projectId}/support-offers/${offerId}/decline`),
-    requestProject: summary => request("POST", "/project-requests", { summary })
+    requestProject: summary => request("POST", "/project-requests", { summary }),
+
+    engineers: status => request("GET", `/admin/engineers?status=${status}`).then(data => data.engineers),
+    approveEngineer: id => request("POST", `/admin/engineers/${id}/approve`),
+    rejectEngineer: id => request("POST", `/admin/engineers/${id}/reject`)
   };
 })();
