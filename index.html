@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ForkLine | Software engineering studio</title>
+<meta name="description" content="A software engineering studio that designs, builds and runs web applications and cloud systems, delivered into a private repository you own.">
+<meta name="theme-color" content="#0F1312">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+<script src="assets/site.config.js"></script>
+<script src="assets/main.js" defer></script>
+</head>
+<body>
+<header class="wrap">
+  <div class="top">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 22 22" aria-hidden="true"><path d="M6 2v18" stroke="var(--accent)" stroke-width="2.2" fill="none"/><path d="M6 6c0 5 10 3 10 9v5" stroke="var(--branch)" stroke-width="2.2" fill="none"/></svg>
+      <span data-brand>ForkLine</span>
+    </a>
+    <nav aria-label="Main">
+      <a class="hide-sm" href="#services">Services</a>
+      <a class="hide-sm" href="#process">Process</a>
+      <a class="hide-sm" href="#workspace">Client workspace</a>
+      <a class="signin" href="#contact">Sign in</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="grid hero">
+      <div class="hero-copy">
+        <h1>Software, built in a repository you own.</h1>
+        <p class="lede"><span data-brand>ForkLine</span> is a software engineering studio. We design, build and run web applications and cloud systems for businesses, and every line of work lands in your own private repository where you can see it.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#contact">Start a project <span class="arrow">&rarr;</span></a>
+          <a class="btn btn-quiet" href="#process">How we work</a>
+        </div>
+      </div>
+      <div class="hero-log">
+        <div class="log" role="img" aria-label="Example git history of a client project, showing a feature branch merged into main and released as version 1.0">
+          <div class="log-head mono"><span>acme-booking</span><span>git log --graph</span></div>
+          <div class="log-body">
+            <svg class="graph" viewBox="0 0 48 216" aria-hidden="true">
+              <path class="main" d="M14 18V198"/>
+              <path class="feat" d="M14 18C14 36 34 36 34 54V110C34 140 14 140 14 162"/>
+              <circle class="main" cx="14" cy="18" r="5"/>
+              <circle class="feat" cx="34" cy="54" r="5"/>
+              <circle class="feat" cx="34" cy="90" r="5"/>
+              <circle class="main" cx="14" cy="126" r="5"/>
+              <circle class="main" cx="14" cy="162" r="5"/>
+              <circle class="main fill" cx="14" cy="198" r="5"/>
+            </svg>
+            <div class="log-rows mono">
+              <div><span class="sha">a1f3c0e</span><span class="msg">Scope signed off</span></div>
+              <div><span class="sha">7d2e91b</span><span class="msg">Booking flow and availability API</span></div>
+              <div><span class="sha">c04b5a2</span><span class="msg">Stripe checkout in test mode</span></div>
+              <div><span class="sha">e19f07d</span><span class="msg">Staging deploy for client review</span></div>
+              <div><span class="sha">3b8d22f</span><span class="msg">Merge feature/booking</span></div>
+              <div><span class="tag">v1.0.0</span><span class="msg">Live on client domain</span></div>
+            </div>
+          </div>
+          <p class="log-note mono">Example project history</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section id="services" class="grid">
+      <div class="sec-head">
+        <span class="mono">Services</span>
+        <h2>Four kinds of work, done properly.</h2>
+        <p>We take on projects where good engineering makes a visible difference to the business.</p>
+      </div>
+      <div class="sec-body services">
+        <div class="service">
+          <h3>Web applications</h3>
+          <p>Customer portals, booking systems, internal tools and dashboards, built to be maintained by whoever comes next.</p>
+          <span class="mono">TypeScript &middot; React &middot; Node &middot; PostgreSQL</span>
+        </div>
+        <div class="service">
+          <h3>Cloud and infrastructure</h3>
+          <p>Hosting, CI/CD pipelines, monitoring and cost reviews on AWS and Azure, set up as code so nothing lives in someone's head.</p>
+          <span class="mono">Terraform &middot; Docker &middot; GitHub Actions</span>
+        </div>
+        <div class="service">
+          <h3>SaaS products</h3>
+          <p>From first version to paying customers: accounts, billing, permissions and the admin tools you need to run it.</p>
+          <span class="mono">Auth &middot; Stripe &middot; multi-tenant data</span>
+        </div>
+        <div class="service">
+          <h3>Maintenance and support</h3>
+          <p>A monthly retainer for updates, fixes and small features on software you already have, whoever originally built it.</p>
+          <span class="mono">Fixed monthly hours &middot; response within one working day</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="process" class="grid">
+      <div class="sec-head">
+        <span class="mono">Process</span>
+        <h2>From first call to live software.</h2>
+        <p>Every project follows the same four steps, so you always know where it stands and what happens next.</p>
+      </div>
+      <div class="sec-body">
+        <ol class="steps">
+          <li class="step">
+            <div class="step-top"><span class="mono">01</span><h3>Scoping call</h3></div>
+            <p>A 30 minute call about what you need, who will use it and what it has to connect to. No charge, and no obligation afterwards.</p>
+          </li>
+          <li class="step">
+            <div class="step-top"><span class="mono">02</span><h3>Fixed proposal</h3></div>
+            <p>A written scope with a fixed price and timeline, broken into milestones. You pay per milestone, so you never pay for work you have not seen.</p>
+          </li>
+          <li class="step branch">
+            <div class="step-top"><span class="mono">03</span><h3>Build in your repository</h3></div>
+            <p>Each feature is built on its own branch and reviewed before it merges. You get a staging link to try every change before it goes live.</p>
+            <span class="mono detail">feature branches &middot; code review &middot; weekly staging release</span>
+          </li>
+          <li class="step">
+            <div class="step-top"><span class="mono">04</span><h3>Launch and handover</h3></div>
+            <p>We deploy to your domain and hand over the code, documentation and access. Keep us on a support retainer or take it in-house. Either way, it is yours.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="workspace" class="grid">
+      <div class="sec-head">
+        <span class="mono">Client workspace</span>
+        <h2>One place to follow your project.</h2>
+        <p>Clients get an account with their own private repositories. Engineers only see the projects they are assigned to.</p>
+        <p class="status mono">In development</p>
+      </div>
+      <div class="sec-body workspace">
+        <div class="ws-points">
+          <div>
+            <h3>Private by default</h3>
+            <p>Each client's code sits in its own repository, invisible to everyone who is not working on it.</p>
+          </div>
+          <div>
+            <h3>Vetted engineers</h3>
+            <p>Engineer accounts are reviewed and approved individually before they can be given any access.</p>
+          </div>
+          <div>
+            <h3>Access you control</h3>
+            <p>See who is on your project, what they changed and when. Access ends when the work does.</p>
+          </div>
+        </div>
+        <div class="roles">
+          <div class="role">
+            <span class="mono">Client account</span>
+            <ul>
+              <li>Private repositories for each project</li>
+              <li>Milestones, invoices and staging links</li>
+              <li>A named engineer for every project</li>
+            </ul>
+          </div>
+          <div class="role">
+            <span class="mono">Engineer account</span>
+            <ul>
+              <li>Approved by hand before activation</li>
+              <li>Access only to assigned client repositories</li>
+              <li>Every change reviewed before it merges</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="grid">
+      <div class="sec-head">
+        <span class="mono">Who you work with</span>
+        <h2>Engineers who have run software in production.</h2>
+      </div>
+      <div class="sec-body founder">
+        <p class="big"><span data-brand>ForkLine</span> was started by Zack, a software engineer with over a year of cloud engineering at one of the UK's leading telecoms businesses, and the founder of an independent SaaS product.</p>
+        <p>That background shapes how we work. Infrastructure is written as code, releases are small and reversible, and the people paying for the software can always see what is happening to it. As the studio grows, every engineer who joins is held to the same standard.</p>
+        <div class="facts">
+          <div><b>Cloud</b><span>Enterprise cloud engineering at a UK telecoms operator</span></div>
+          <div><b>Product</b><span>Founder of a SaaS product running in production</span></div>
+          <div><b>UK based</b><span>Working with clients remotely across the UK</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="band">
+    <div class="wrap">
+      <section id="contact" class="grid">
+        <div class="sec-head">
+          <span class="mono">Start a project</span>
+          <h2>Tell us what you need built.</h2>
+          <p>We reply within one working day with a time for a scoping call.</p>
+          <p class="contact-mail" data-brand-email>hello@forkline.dev</p>
+        </div>
+        <div class="sec-body">
+          <form id="enquiry" novalidate>
+            <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name"></div>
+            <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email"></div>
+            <div class="field"><label for="f-company">Company</label><input id="f-company" name="company" autocomplete="organization"></div>
+            <div class="field"><label for="f-budget">Rough budget</label>
+              <select id="f-budget" name="budget">
+                <option>Not sure yet</option><option>Under £5k</option><option>£5k to £15k</option><option>£15k to £40k</option><option>Over £40k</option><option>Monthly retainer</option>
+              </select></div>
+            <div class="field full"><label for="f-msg">What do you need?</label><textarea id="f-msg" name="message" placeholder="A few sentences is plenty. What it is, who uses it, and any deadline."></textarea></div>
+            <div class="form-foot">
+              <span class="hint" id="f-status">This form is not connected yet. Please email us instead.</span>
+              <button class="btn btn-primary" type="submit">Send enquiry <span class="arrow">&rarr;</span></button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <span>&copy; <span id="year">2026</span> <span data-brand>ForkLine</span></span>
+    <nav aria-label="Footer">
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#contact">Join as an engineer</a>
+      <a href="#contact">Client sign in</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
