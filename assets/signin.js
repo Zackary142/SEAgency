@@ -52,7 +52,8 @@ function setMode(next) {
 function fromHash() {
   if (location.hash.startsWith("#verify=")) {
     setMode("signin");
-    verify(location.hash.slice("#verify=".length));
+    /* Keep only the token's own characters, in case extra text was copied with the link. */
+    verify(location.hash.slice("#verify=".length).match(/^[\w-]*/)[0]);
   } else if (location.hash === "#engineer") {
     form.elements.role.value = "engineer";
     setMode("register");
