@@ -32,16 +32,22 @@ const API = (() => {
     logout: () => request("POST", "/auth/logout"),
     me: () => request("GET", "/auth/me").then(data => data.user),
 
-    projects: status => request("GET", `/projects?status=${status}`),
+    projects: status => request("GET", `/projects?status=${status}`).then(data => data.projects),
     updates: projectId => request("GET", `/projects/${projectId}/updates`),
-    colleagues: () => request("GET", "/projects/colleagues"),
+    colleagues: () => request("GET", "/projects/colleagues").then(data => data.projects),
     offerSupport: (projectId, message) => request("POST", `/projects/${projectId}/support-offers`, { message }),
     acceptOffer: (projectId, offerId) => request("POST", `/projects/${projectId}/support-offers/${offerId}/accept`),
     declineOffer: (projectId, offerId) => request("POST", `/projects/${projectId}/support-offers/${offerId}/decline`),
     requestProject: summary => request("POST", "/project-requests", { summary }),
+    myRequests: () => request("GET", "/project-requests").then(data => data.requests),
 
     engineers: status => request("GET", `/admin/engineers?status=${status}`).then(data => data.engineers),
     approveEngineer: id => request("POST", `/admin/engineers/${id}/approve`),
-    rejectEngineer: id => request("POST", `/admin/engineers/${id}/reject`)
+    rejectEngineer: id => request("POST", `/admin/engineers/${id}/reject`),
+    openRequests: () => request("GET", "/project-requests?status=open").then(data => data.requests),
+    allProjects: () => request("GET", "/admin/projects").then(data => data.projects),
+    startProject: body => request("POST", "/admin/projects", body),
+    declineRequest: id => request("POST", `/admin/project-requests/${id}/decline`),
+    setProjectStatus: (id, status) => request("PATCH", `/admin/projects/${id}`, { status })
   };
 })();

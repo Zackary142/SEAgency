@@ -19,9 +19,15 @@ function sampleSource(data) {
     acceptOffer: () => wait({}),
     declineOffer: () => wait({}),
     requestProject: () => wait({}),
+    myRequests: () => wait(data.requests || []),
     engineers: status => wait(data.engineers?.[status] || []),
     approveEngineer: () => wait({}),
     rejectEngineer: () => wait({}),
+    openRequests: () => wait(data.requests || []),
+    allProjects: () => wait(data.allProjects || []),
+    startProject: () => wait({}),
+    declineRequest: () => wait({}),
+    setProjectStatus: () => wait({}),
     logout: () => wait({})
   };
 }
@@ -37,7 +43,8 @@ const source = preview ? sampleSource(SAMPLE[preview]) : {
   ...API,
   projects: orEmpty(API.projects, []),
   updates: orEmpty(API.updates, null),
-  colleagues: orEmpty(API.colleagues, [])
+  colleagues: orEmpty(API.colleagues, []),
+  myRequests: orEmpty(API.myRequests, [])
 };
 
 /* ---------- helpers ---------- */
@@ -110,8 +117,8 @@ function customerView(me, project, updates) {
     <div class="split">
       <div class="split-main panel">
         <div class="panel-head">
-          <span>${esc(project.repo.fullName)} <span class="dim">&middot; private</span></span>
-          <span><span class="ok">In progress</span>${project.milestone ? ` &middot; milestone ${project.milestone.current} of ${project.milestone.total}` : ""}</span>
+          <span>${project.repo ? `${esc(project.repo.fullName)} <span class="dim">&middot; private</span>` : `<span class="dim">repository being set up</span>`}</span>
+          <span>${project.status === "paused" ? '<span class="sec">Paused</span>' : '<span class="ok">In progress</span>'}${project.milestone ? ` &middot; milestone ${project.milestone.current} of ${project.milestone.total}` : ""}</span>
         </div>
         ${commit}
         ${earlier}
@@ -120,7 +127,7 @@ function customerView(me, project, updates) {
         <div class="side-block"><span class="eyebrow">Your engineers</span>${engineers}</div>
         ${next ? `<div class="side-block"><span class="eyebrow">Next milestone</span><div class="person"><b>${esc(next.name)}</b><span>Due ${day(next.due)}</span></div></div>` : ""}
         <div class="side-block side-links">
-          ${project.repo.url ? `<a href="${esc(project.repo.url)}">Open the repository on GitHub</a>` : ""}
+          ${project.repo?.url ? `<a href="${esc(project.repo.url)}">Open the repository on GitHub</a>` : ""}
           <a href="#request" data-action="show-request">Request another project</a>
         </div>
         <div class="side-block" id="request" hidden>${requestForm()}</div>
@@ -140,7 +147,17 @@ function requestForm() {
     </form>`;
 }
 
-function customerEmptyView(me) {
+function requestsBlock(requests) {
+  if (!requests.length) return "";
+  const label = { open: "Waiting for a reply", accepted: "Starting soon", declined: "Declined" };
+  return `
+        <div class="side-block">
+          <span class="eyebrow">Your requests</span>
+          ${requests.map(r => `<div class="person"><b class="clamp">${esc(r.summary)}</b><span>${label[r.status] || esc(r.status)} &middot; sent ${when(r.createdAt)}</span></div>`).join("")}
+        </div>`;
+}
+
+function customerEmptyView(me, requests = []) {
   const asks = [
     ["A web application", "a customer portal, booking system or internal tool"],
     ["Cloud and infrastructure", "hosting, deploys, monitoring or a cost review"],
@@ -187,6 +204,7 @@ function customerEmptyView(me) {
             <li><span class="mono">03</span><span>Your repository and engineer appear here</span></li>
           </ol>
         </div>
+        ${requestsBlock(requests)}
         <div class="side-block"><span class="eyebrow">Past projects</span><p>Finished projects stay listed here with their repository.</p></div>
       </div>
     </div>`;
@@ -211,13 +229,13 @@ function engineerCard(p) {
     : `<span class="sec">Secondary${p.addedBy ? ` &middot; added by ${esc(p.addedBy)}` : ""}</span>`;
   return `
     <div class="panel">
-      <div class="panel-head"><span>${esc(p.repo.fullName)}</span>${tag}</div>
+      <div class="panel-head"><span>${p.repo ? esc(p.repo.fullName) : '<span class="dim">repository being set up</span>'}</span>${tag}</div>
       <div class="card-body">
-        <div><h3>${esc(p.name)}</h3>${p.detail ? `<span class="sub">${esc(p.detail)}</span>` : ""}</div>
+        <div><h3>${esc(p.name)}</h3>${p.detail || p.stack ? `<span class="sub">${esc(p.detail || p.stack)}</span>` : ""}</div>
         ${p.lastCommit ? `<div class="last"><span>latest commit</span><span>${esc(p.lastCommit.sha)} ${esc(p.lastCommit.message)}</span></div>` : ""}
         ${(p.offers || []).map(o => offerBlock(p, o)).join("")}
         <div class="row-actions">
-          ${p.repo.url ? `<a class="btn btn-quiet btn-small" href="${esc(p.repo.url)}">Open on GitHub</a>` : ""}
+          ${p.repo?.url ? `<a class="btn btn-quiet btn-small" href="${esc(p.repo.url)}">Open on GitHub</a>` : ""}
         </div>
       </div>
     </div>`;
@@ -225,13 +243,13 @@ function engineerCard(p) {
 
 function colleagueRow(c) {
   const button = c.offerStatus === "pending"
-    ? `<button class="btn btn-quiet btn-small" type="button" disabled>Offer sent to ${esc(firstName(c.primary))}</button>`
-    : `<button class="btn btn-quiet btn-small" type="button" data-action="offer" data-project="${esc(c.id)}" data-primary="${esc(firstName(c.primary))}">Offer support</button>`;
+    ? `<button class="btn btn-quiet btn-small" type="button" disabled>Offer sent to ${esc(firstName(c.primary || "the primary"))}</button>`
+    : `<button class="btn btn-quiet btn-small" type="button" data-action="offer" data-project="${esc(c.id)}" data-primary="${esc(firstName(c.primary || "the primary"))}">Offer support</button>`;
   return `
     <div class="colleague">
       <div>
-        <div class="name"><b>${esc(c.repo)}</b><span class="mono">${esc(c.stack || "")}</span></div>
-        <span class="meta">Primary: ${esc(c.primary)} &middot; ${esc(c.helpWanted || "No help requested yet")}</span>
+        <div class="name"><b>${esc(c.stack || "Stack not set yet")}</b></div>
+        <span class="meta">Primary: ${esc(c.primary || "not assigned")} &middot; ${esc(c.helpWanted || "No help requested yet")}</span>
       </div>
       <div><span class="lock">${lockIcon}no access</span>${button}</div>
     </div>`;
@@ -255,7 +273,7 @@ function engineerView(me, active, closed, colleagues) {
       <div class="table-wrap">
         <table>
           <thead><tr><th>Repository</th><th>Client</th><th>Your role</th><th>Released</th><th>Closed</th></tr></thead>
-          <tbody>${closed.map(r => `<tr><td class="code">${esc(r.repo.fullName)}</td><td>${esc(r.client)}</td><td>${roleLabel(r.myRole)}</td><td class="tag">${esc(r.releaseTag || "")}</td><td>${fullDay(r.closedAt)}</td></tr>`).join("")}</tbody>
+          <tbody>${closed.map(r => `<tr><td class="code">${esc(r.repo?.fullName || r.name)}</td><td>${esc(r.client)}</td><td>${roleLabel(r.myRole)}</td><td class="tag">${esc(r.releaseTag || "")}</td><td>${fullDay(r.closedAt)}</td></tr>`).join("")}</tbody>
         </table>
       </div>` : `<p class="empty-note">Projects you finish will be listed here.</p>`}
     </section>
@@ -313,17 +331,85 @@ function engineerTable(list, rejected) {
       </div>`;
 }
 
-function adminView(me, pending, approved, rejected) {
+const customerName = c => c.companyName ? `${c.displayName}, ${c.companyName}` : c.displayName;
+const STATUS = { active: '<span class="ok">Active</span>', paused: '<span class="sec">Paused</span>', closed: '<span class="dim">Closed</span>' };
+
+function requestCard(r, engineers) {
+  const options = engineers.map(e => `<option value="${esc(e.id)}">${esc(e.displayName)} (${esc(e.githubUsername)})</option>`).join("");
   return `
+    <div class="panel" data-request="${esc(r.id)}">
+      <div class="panel-head"><span>${esc(customerName(r.customer))}</span><span class="dim">asked ${when(r.createdAt)}</span></div>
+      <div class="card-body">
+        <p class="application">&ldquo;${esc(r.summary)}&rdquo;</p>
+        <div class="row-actions" data-request-actions>
+          <button class="btn btn-primary btn-small" type="button" data-action="show-start">Start a project</button>
+          <button class="btn btn-quiet btn-small" type="button" data-action="decline-request" data-id="${esc(r.id)}" data-name="${esc(firstName(r.customer.displayName))}">Decline</button>
+        </div>
+        <form class="start-form" data-form="start" data-id="${esc(r.id)}" hidden novalidate>
+          <div class="field"><label for="name-${esc(r.id)}">Project name</label>
+            <input id="name-${esc(r.id)}" name="name" maxlength="120" placeholder="Online booking for Northgate Dental"></div>
+          <div class="field"><label for="stack-${esc(r.id)}">Stack <span class="dim">(other engineers see this, not the customer)</span></label>
+            <input id="stack-${esc(r.id)}" name="stack" maxlength="120" placeholder="Node · PostgreSQL · AWS"></div>
+          <div class="field"><label for="primary-${esc(r.id)}">Primary engineer</label>
+            <select id="primary-${esc(r.id)}" name="primaryId">${engineers.length ? `<option value="">Choose an engineer</option>${options}` : `<option value="">Approve an engineer first</option>`}</select></div>
+          <div class="form-foot">
+            <span class="form-msg" role="status"></span>
+            <button class="btn btn-primary btn-small" type="submit">Start project <span class="arrow">&rarr;</span></button>
+          </div>
+        </form>
+      </div>
+    </div>`;
+}
+
+function projectTable(projects) {
+  return `
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Project</th><th>Customer</th><th>Primary</th><th>Secondaries</th><th>Started</th><th>Status</th></tr></thead>
+          <tbody>${projects.map(p => `<tr><td class="strong">${esc(p.name)}</td><td>${esc(customerName(p.customer))}</td><td>${esc(p.primary?.displayName || "None yet")}</td><td>${p.secondaries}</td><td>${fullDay(p.createdAt)}</td><td>
+            <select class="status-select" data-action="project-status" data-id="${esc(p.id)}" aria-label="Status of ${esc(p.name)}">${["active", "paused", "closed"].map(st => `<option value="${st}"${st === p.status ? " selected" : ""}>${st[0].toUpperCase() + st.slice(1)}</option>`).join("")}</select></td></tr>`).join("")}</tbody>
+        </table>
+      </div>`;
+}
+
+function adminView(me, requests, projects, pending, approved, rejected) {
+  const open = projects.filter(p => p.status !== "closed");
+  const closed = projects.filter(p => p.status === "closed");
+  return `
+    <div class="page-head"><span class="eyebrow">Admin</span><h1>Welcome back, ${esc(firstName(me.displayName))}.</h1>
+      <p class="who">${requests.length} new ${requests.length === 1 ? "request" : "requests"} &middot; ${pending.length} ${pending.length === 1 ? "engineer" : "engineers"} waiting &middot; ${open.length} open ${open.length === 1 ? "project" : "projects"}</p></div>
+
     <section class="dash-section">
       <div class="section-head">
-        <div><span class="eyebrow">Admin</span><h1>Engineers waiting for you</h1>
+        <div><span class="eyebrow">Requests</span><h2>Customers asking for work</h2>
+        <p>Start a project once you've had the scoping call. The customer sees it on their dashboard straight away, and the primary engineer gets access.</p></div>
+        <span class="mono">${requests.length} new</span>
+      </div>
+      ${requests.length ? `<div class="cards">${requests.map(r => requestCard(r, approved)).join("")}</div>`
+        : `<p class="empty-note">No new requests. You get an email when a customer sends one.</p>`}
+    </section>
+
+    <section class="dash-section">
+      <div class="section-head">
+        <div><span class="eyebrow">Engineers</span><h2>Waiting for approval</h2>
         <p>An engineer can't see any project until you approve them. They're emailed either way.</p></div>
         <span class="mono">${pending.length} waiting</span>
       </div>
       ${pending.length ? `<div class="cards">${pending.map(applicantCard).join("")}</div>`
         : `<p class="empty-note">Nobody is waiting. You get an email when an engineer signs up and confirms their address.</p>`}
     </section>
+
+    <section class="dash-section">
+      <div class="section-head"><div><span class="eyebrow">Projects</span><h2>Open projects</h2>
+        <p>Pausing keeps everyone's access. Closing removes the engineers' access and moves it to their finished work.</p></div>
+        <span class="mono">${open.length} open</span></div>
+      ${open.length ? projectTable(open) : `<p class="empty-note">Projects you start from a request are listed here.</p>`}
+    </section>
+    ${closed.length ? `
+    <section class="dash-section">
+      <div class="section-head"><div><span class="eyebrow">Closed</span><h2>Finished projects</h2></div><span class="mono">${closed.length} closed</span></div>
+      ${projectTable(closed)}
+    </section>` : ""}
 
     <section class="dash-section">
       <div class="section-head"><div><span class="eyebrow">Team</span><h2>Approved engineers</h2></div><span class="mono">${approved.length} approved</span></div>
@@ -359,7 +445,8 @@ async function load() {
   if (me.role === "customer") {
     const projects = await source.projects("active");
     if (!projects.length) {
-      app.innerHTML = previewBar() + customerEmptyView(me);
+      const requests = await source.myRequests();
+      app.innerHTML = previewBar() + customerEmptyView(me, requests);
       return;
     }
     const updates = await source.updates(projects[0].id);
@@ -368,8 +455,10 @@ async function load() {
   }
 
   if (me.role === "admin") {
-    const [pending, approved, rejected] = await Promise.all(["pending", "approved", "rejected"].map(source.engineers));
-    app.innerHTML = previewBar() + adminView(me, pending, approved, rejected);
+    const [requests, projects, pending, approved, rejected] = await Promise.all([
+      source.openRequests(), source.allProjects(), ...["pending", "approved", "rejected"].map(source.engineers)
+    ]);
+    app.innerHTML = previewBar() + adminView(me, requests, projects, pending, approved, rejected);
     return;
   }
 
@@ -402,10 +491,26 @@ app.addEventListener("click", async e => {
     return;
   }
 
+  if (action === "show-start") {
+    const card = el.closest("[data-request]");
+    card.querySelector("[data-request-actions]").hidden = true;
+    const form = card.querySelector("form");
+    form.hidden = false;
+    form.elements.name.focus();
+    return;
+  }
+  if (action === "decline-request" && !confirm(`Decline ${el.dataset.name}'s request? They'll get an email saying you can't take it on.`)) return;
+  if (action === "project-status") return;
+
   if (action === "reject" && !confirm(`Reject ${el.dataset.name}? They'll get an email saying they weren't approved.`)) return;
 
   el.disabled = true;
   try {
+    if (action === "decline-request") {
+      await source.declineRequest(el.dataset.id);
+      if (preview) { el.closest("[data-request]").remove(); return; }
+      return load();
+    }
     if (action === "approve" || action === "reject") {
       await (action === "approve" ? source.approveEngineer : source.rejectEngineer)(el.dataset.id);
       if (preview) { el.closest("[data-engineer]").remove(); return; }
@@ -430,6 +535,45 @@ app.addEventListener("click", async e => {
   }
 });
 
+app.addEventListener("change", async e => {
+  const el = e.target.closest('[data-action="project-status"]');
+  if (!el) return;
+  const status = el.value;
+  if (status === "closed" && !confirm("Close this project? Engineers lose access to it, and it moves to finished work.")) return load();
+  el.disabled = true;
+  try {
+    await source.setProjectStatus(el.dataset.id, status);
+    if (!preview) return load();
+  } catch {
+    alert("That didn't go through. Please try again.");
+    if (!preview) return load();
+  } finally {
+    el.disabled = false;
+  }
+});
+
+app.addEventListener("submit", async e => {
+  if (e.target.dataset.form !== "start") return;
+  e.preventDefault();
+  const form = e.target;
+  const note = form.querySelector(".form-msg");
+  const name = form.elements.name.value.trim();
+  const primaryId = form.elements.primaryId.value;
+  if (!name) { note.textContent = "Give the project a name."; return; }
+  if (!primaryId) { note.textContent = "Choose a primary engineer."; return; }
+  const button = form.querySelector("button[type=submit]");
+  button.disabled = true;
+  try {
+    await source.startProject({ requestId: form.dataset.id, name, stack: form.elements.stack.value.trim(), primaryId });
+    if (preview) { note.textContent = "In the preview nothing is saved, but this starts the project."; return; }
+    return load();
+  } catch {
+    note.textContent = "That didn't go through. Please try again.";
+  } finally {
+    button.disabled = false;
+  }
+});
+
 app.addEventListener("submit", async e => {
   if (e.target.dataset.form !== "request") return;
   e.preventDefault();
@@ -440,9 +584,13 @@ app.addEventListener("submit", async e => {
   try {
     await source.requestProject(summary);
     form.reset();
+    if (!preview) { await load(); return; }
     note.textContent = preview ? "In the preview nothing is sent, but this is where your request goes." : "Thanks. We will reply within one working day.";
   } catch (err) {
-    note.textContent = API.notBuilt(err) ? "Requests are not switched on yet. Please email us instead." : "That didn't go through. Please try again.";
+    note.textContent = API.notBuilt(err) ? "Requests are not switched on yet. Please email us instead."
+      : err.code === "invalid_body" ? "Please tell us a bit more, a sentence or two is plenty."
+      : err.code === "too_many_open_requests" ? "You already have a few requests waiting. We'll reply to those first."
+      : "That didn't go through. Please try again.";
   }
 });
 
