@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign in | ForkLine</title>
+<meta name="description" content="Sign in or create an account for the client workspace.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0F1312">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/styles.css?v=4">
+<script src="assets/site.config.js?v=4"></script>
+<script src="assets/main.js?v=4" defer></script>
+<script src="assets/api.js?v=4" defer></script>
+<script src="assets/signin.js?v=4" defer></script>
+</head>
+<body data-page="Sign in">
+<header class="wrap">
+  <div class="top">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 22 22" aria-hidden="true"><path d="M6 2v18" stroke="var(--accent)" stroke-width="2.2" fill="none"/><path d="M6 6c0 5 10 3 10 9v5" stroke="var(--branch)" stroke-width="2.2" fill="none"/></svg>
+      <span data-brand>ForkLine</span>
+    </a>
+    <nav aria-label="Main"><a href="index.html">Back to the site</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="auth">
+    <div class="auth-copy">
+      <span class="eyebrow">Client workspace</span>
+      <h1 id="auth-title">Sign in to your workspace.</h1>
+      <p id="auth-intro">Clients and engineers sign in here. You will land on the dashboard for your account type.</p>
+      <ul class="plus">
+        <li>Clients see their own repositories and nothing else.</li>
+        <li>Engineer accounts are approved by hand before they get any access.</li>
+        <li>Sessions use a secure cookie. Nothing is stored in your browser.</li>
+      </ul>
+    </div>
+
+    <div class="auth-card">
+      <div class="tabs" role="tablist" aria-label="Account">
+        <button class="tab" role="tab" id="tab-signin" aria-controls="auth-form" aria-selected="true">Sign in</button>
+        <button class="tab" role="tab" id="tab-register" aria-controls="auth-form" aria-selected="false">Create account</button>
+      </div>
+
+      <form id="auth-form" novalidate>
+        <fieldset class="choice" data-register hidden>
+          <legend>I am joining as</legend>
+          <div class="choice-opts">
+            <label>A client<input type="radio" name="role" value="customer" checked><span>I want software built</span></label>
+            <label>An engineer<input type="radio" name="role" value="engineer"><span>I want to work on projects</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field" data-register hidden><label for="a-name">Your name</label><input id="a-name" name="displayName" autocomplete="name" maxlength="80"></div>
+        <div class="field" data-customer hidden><label for="a-company">Company <span class="note">(optional)</span></label><input id="a-company" name="companyName" autocomplete="organization" maxlength="120"></div>
+        <div class="field"><label for="a-email">Email</label><input id="a-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field">
+          <div class="field-row"><label for="a-pass">Password</label><a href="mailto:hello@forkline.dev" id="forgot" data-signin>Forgotten it?</a></div>
+          <input id="a-pass" name="password" type="password" autocomplete="current-password" required minlength="12">
+          <span class="note" data-register hidden>At least 12 characters.</span>
+        </div>
+
+        <div class="field" data-engineer hidden><label for="a-gh">GitHub username</label><input id="a-gh" name="githubUsername" autocomplete="username" maxlength="39"><span class="note">Used to give you access to a repository once you are assigned to it.</span></div>
+        <div class="field" data-engineer hidden><label for="a-app">About your experience</label><textarea id="a-app" name="application" maxlength="2000" placeholder="A few lines on what you have built and what you would like to work on."></textarea></div>
+        <p class="callout" data-engineer hidden><span class="mono">REVIEWED BY HAND</span>New engineer accounts start as pending. You can sign in and see your status, but no project is visible until your account is approved.</p>
+
+        <label class="check" data-register hidden><input type="checkbox" name="marketingOptIn"><span>Send me the occasional email about new services. You can turn this off any time.</span></label>
+        <p class="form-msg" data-register hidden>By creating an account you confirm you have read the <a href="privacy.html">privacy notice</a>.</p>
+
+        <div class="form-foot">
+          <span class="form-msg" id="auth-msg" role="status"></span>
+          <button class="btn btn-primary" type="submit"><span id="auth-submit">Sign in</span> <span class="arrow">&rarr;</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer class="wrap">
+  <div class="foot">
+    <span>&copy; <span id="year">2026</span> <span data-brand>ForkLine</span></span>
+    <nav aria-label="Footer"><a href="privacy.html">Privacy notice</a><a href="index.html#contact">Contact</a></nav>
+  </div>
+</footer>
+</body>
+</html>
