@@ -50,7 +50,10 @@ function setMode(next) {
 }
 
 function fromHash() {
-  if (location.hash === "#engineer") {
+  if (location.hash.startsWith("#verify=")) {
+    setMode("signin");
+    verify(location.hash.slice("#verify=".length));
+  } else if (location.hash === "#engineer") {
     form.elements.role.value = "engineer";
     setMode("register");
   } else {
@@ -111,6 +114,32 @@ function notLiveYet() {
   msg.append(a);
 }
 
+const ERRORS = {
+  wrong_email_or_password: "That email and password don't match an account.",
+  email_not_verified: "Please confirm your email first. We've sent you a new link.",
+  password_breached: "That password has appeared in a known data breach. Please choose a different one.",
+  github_username_taken: "That GitHub username is already linked to an account.",
+  too_many_attempts: "Too many attempts. Please wait 15 minutes and try again.",
+  invalid_body: "Please check the form and try again.",
+  database_not_configured: "Accounts are not switched on yet.",
+  429: "Too many attempts. Please wait a minute and try again."
+};
+
+/* The link in the confirmation email lands here as #verify=<token>. */
+async function verify(token) {
+  history.replaceState(null, "", location.pathname);
+  if (!API.connected) return notLiveYet();
+  say("Confirming your email\u2026");
+  try {
+    await API.verifyEmail(token);
+    location.href = "dashboard.html";
+  } catch (err) {
+    say(err.code === "link_expired"
+      ? "That link has expired or was already used. Sign in and we'll send you a new one."
+      : "We couldn't confirm your email. Please try the link again.", true);
+  }
+}
+
 form.addEventListener("submit", async e => {
   e.preventDefault();
   const issue = problem();
@@ -132,10 +161,7 @@ form.addEventListener("submit", async e => {
     }
   } catch (err) {
     if (API.notBuilt(err)) notLiveYet();
-    else if (err.status === 401) say("That email and password don't match an account.", true);
-    else if (err.status === 409) say("There is already an account with that email. Try signing in.", true);
-    else if (err.status === 429) say("Too many attempts. Please wait a few minutes and try again.", true);
-    else say("Something went wrong. Please try again.", true);
+    else say(ERRORS[err.code] || ERRORS[err.status] || "Something went wrong. Please try again.", true);
   } finally {
     button.disabled = false;
   }
