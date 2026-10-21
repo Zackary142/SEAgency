@@ -31,3 +31,7 @@ assets/main.js          fills brand slots, form placeholder
 assets/styles.css       all styles (dark theme only)
 assets/favicon.svg
 ```
+
+## Deploying changes
+
+GitHub Pages tells browsers to cache CSS and JS for 10 minutes. When you change a file in `assets/`, bump the `?v=` number on its link in `index.html` so visitors get the new version straight away.
