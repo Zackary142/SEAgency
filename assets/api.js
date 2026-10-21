@@ -14,6 +14,7 @@ const API = (() => {
     if (!res.ok) {
       const err = new Error(data?.error || res.statusText);
       err.status = res.status;
+      err.code = data?.error;
       throw err;
     }
     return data;
@@ -26,9 +27,10 @@ const API = (() => {
     notBuilt: err => err.status === 501,
 
     signup: body => request("POST", "/auth/signup", body),
+    verifyEmail: token => request("POST", "/auth/verify-email", { token }),
     login: body => request("POST", "/auth/login", body),
     logout: () => request("POST", "/auth/logout"),
-    me: () => request("GET", "/auth/me"),
+    me: () => request("GET", "/auth/me").then(data => data.user),
 
     projects: status => request("GET", `/projects?status=${status}`),
     updates: projectId => request("GET", `/projects/${projectId}/updates`),

@@ -46,6 +46,11 @@ empty in `assets/site.config.js`: sign in then offers a preview, and the
 dashboard shows sample data. Switch between the views with
 `dashboard.html?preview=customer`, `customer-empty`, `engineer` or `pending`.
 
+To try real accounts before then, run the API with `SITE_DIR` pointing at
+this folder (see the API's README). It serves these pages on its own
+address with `apiUrl` filled in, so sign up, the email link, sign in and the
+dashboard all work against the dev database.
+
 Once the API is live, set `apiUrl` to its address. The API must list this
 site's address in its `FRONTEND_ORIGIN` so the browser sends the session
 cookie.

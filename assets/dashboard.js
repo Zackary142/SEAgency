@@ -23,7 +23,19 @@ function sampleSource(data) {
   };
 }
 
-const source = preview ? sampleSource(SAMPLE[preview]) : API;
+/* Project routes come in a later API step. Until then they answer 501, and the
+   dashboard shows its empty states rather than an error. */
+const orEmpty = (call, empty) => (...args) => call(...args).catch(err => {
+  if (API.notBuilt(err)) return empty;
+  throw err;
+});
+
+const source = preview ? sampleSource(SAMPLE[preview]) : {
+  ...API,
+  projects: orEmpty(API.projects, []),
+  updates: orEmpty(API.updates, null),
+  colleagues: orEmpty(API.colleagues, [])
+};
 
 /* ---------- helpers ---------- */
 
