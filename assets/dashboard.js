@@ -19,6 +19,10 @@ function sampleSource(data) {
     acceptOffer: () => wait({}),
     declineOffer: () => wait({}),
     requestProject: () => wait({}),
+    addNotes: () => wait({}),
+    setMember: () => wait({}),
+    removeMember: () => wait({}),
+    syncProject: () => wait({ github: "ok" }),
     myRequests: () => wait(data.requests || []),
     engineers: status => wait(data.engineers?.[status] || []),
     approveEngineer: () => wait({}),
@@ -42,7 +46,8 @@ const orEmpty = (call, empty) => (...args) => call(...args).catch(err => {
 const source = preview ? sampleSource(SAMPLE[preview]) : {
   ...API,
   projects: orEmpty(API.projects, []),
-  updates: orEmpty(API.updates, null),
+  // GitHub being slow or down shouldn't break the dashboard: show no commits instead.
+  updates: (...args) => API.updates(...args).catch(() => null),
   colleagues: orEmpty(API.colleagues, []),
   myRequests: orEmpty(API.myRequests, [])
 };
@@ -97,7 +102,7 @@ function customerView(me, project, updates) {
         </div>
       </div>
       <div class="notes">
-        ${latest.points?.length ? `<span>Notes from ${esc(firstName(latest.author))} on this change</span>
+        ${latest.points?.length ? `<span>Notes from ${esc(firstName(latest.notesBy || latest.author))} on this change</span>
         <ul class="plus">${latest.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : `<span>No notes on this change yet.</span>`}
         <div class="actions">
           ${project.stagingUrl ? `<a class="btn btn-primary" href="${esc(project.stagingUrl)}">Try it on staging <span class="arrow">&rarr;</span></a>` : ""}
@@ -236,7 +241,17 @@ function engineerCard(p) {
         ${(p.offers || []).map(o => offerBlock(p, o)).join("")}
         <div class="row-actions">
           ${p.repo?.url ? `<a class="btn btn-quiet btn-small" href="${esc(p.repo.url)}">Open on GitHub</a>` : ""}
+          ${p.lastCommit && p.status !== "closed" ? `<button class="btn btn-quiet btn-small" type="button" data-action="show-notes">Add notes for the customer</button>` : ""}
         </div>
+        ${p.lastCommit && p.status !== "closed" ? `
+        <form class="start-form" data-form="notes" data-project="${esc(p.id)}" hidden novalidate>
+          <div class="field"><label for="notes-${esc(p.id)}">Notes on ${esc(p.lastCommit.sha)}, one point per line</label>
+            <textarea id="notes-${esc(p.id)}" name="points" rows="4" placeholder="What changed, in words the customer understands.&#10;Anything they should try or decide."></textarea></div>
+          <div class="form-foot">
+            <span class="form-msg" role="status"></span>
+            <button class="btn btn-primary btn-small" type="submit">Post notes <span class="arrow">&rarr;</span></button>
+          </div>
+        </form>` : ""}
       </div>
     </div>`;
 }
@@ -361,13 +376,38 @@ function requestCard(r, engineers) {
     </div>`;
 }
 
-function projectTable(projects) {
+function manageRow(p, engineers) {
+  const onIt = new Set((p.engineers || []).map(e => e.id));
+  const others = engineers.filter(e => !onIt.has(e.id));
+  return `
+          <tr class="manage-row" data-manage="${esc(p.id)}" hidden><td colspan="7">
+            <div class="manage">
+              <div class="manage-list">
+                ${(p.engineers || []).map(e => `
+                <div class="manage-person"><span><b>${esc(e.displayName)}</b> <span class="dim">&middot; ${roleLabel(e.role).toLowerCase()}</span></span>
+                  <span class="row-actions">
+                    ${e.role === "secondary" ? `<button class="btn btn-quiet btn-small" type="button" data-action="make-primary" data-project="${esc(p.id)}" data-id="${esc(e.id)}">Make primary</button>` : ""}
+                    <button class="btn btn-quiet btn-small" type="button" data-action="remove-member" data-project="${esc(p.id)}" data-id="${esc(e.id)}" data-name="${esc(firstName(e.displayName))}">Remove</button>
+                  </span></div>`).join("") || `<p class="dim">Nobody is on this project.</p>`}
+              </div>
+              <div class="row-actions">
+                ${others.length ? `<select class="status-select" data-add-engineer aria-label="Engineer to add">${others.map(e => `<option value="${esc(e.id)}">${esc(e.displayName)}</option>`).join("")}</select>
+                <button class="btn btn-quiet btn-small" type="button" data-action="add-member" data-project="${esc(p.id)}">Add as secondary</button>` : ""}
+                <button class="btn btn-quiet btn-small" type="button" data-action="sync-project" data-project="${esc(p.id)}">Sync with GitHub</button>
+              </div>
+            </div>
+          </td></tr>`;
+}
+
+function projectTable(projects, engineers) {
   return `
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Project</th><th>Customer</th><th>Primary</th><th>Secondaries</th><th>Started</th><th>Status</th></tr></thead>
-          <tbody>${projects.map(p => `<tr><td class="strong">${esc(p.name)}</td><td>${esc(customerName(p.customer))}</td><td>${esc(p.primary?.displayName || "None yet")}</td><td>${p.secondaries}</td><td>${fullDay(p.createdAt)}</td><td>
-            <select class="status-select" data-action="project-status" data-id="${esc(p.id)}" aria-label="Status of ${esc(p.name)}">${["active", "paused", "closed"].map(st => `<option value="${st}"${st === p.status ? " selected" : ""}>${st[0].toUpperCase() + st.slice(1)}</option>`).join("")}</select></td></tr>`).join("")}</tbody>
+          <thead><tr><th>Project</th><th>Customer</th><th>Primary</th><th>Secondaries</th><th>Repository</th><th>Status</th><th></th></tr></thead>
+          <tbody>${projects.map(p => `<tr><td class="strong">${esc(p.name)}</td><td>${esc(customerName(p.customer))}</td><td>${esc(p.primary?.displayName || "None yet")}</td><td>${p.secondaries}</td>
+            <td class="code">${p.repo ? `<a href="${esc(p.repo.url)}" target="_blank" rel="noopener">${esc(p.repo.fullName.split("/")[1])}</a>` : `<span class="dim">not created</span>`}</td><td>
+            <select class="status-select" data-action="project-status" data-id="${esc(p.id)}" aria-label="Status of ${esc(p.name)}">${["active", "paused", "closed"].map(st => `<option value="${st}"${st === p.status ? " selected" : ""}>${st[0].toUpperCase() + st.slice(1)}</option>`).join("")}</select></td>
+            <td><button class="linkish" type="button" data-action="manage" data-project="${esc(p.id)}">Manage</button></td></tr>${manageRow(p, engineers)}`).join("")}</tbody>
         </table>
       </div>`;
 }
@@ -403,12 +443,12 @@ function adminView(me, requests, projects, pending, approved, rejected) {
       <div class="section-head"><div><span class="eyebrow">Projects</span><h2>Open projects</h2>
         <p>Pausing keeps everyone's access. Closing removes the engineers' access and moves it to their finished work.</p></div>
         <span class="mono">${open.length} open</span></div>
-      ${open.length ? projectTable(open) : `<p class="empty-note">Projects you start from a request are listed here.</p>`}
+      ${open.length ? projectTable(open, approved) : `<p class="empty-note">Projects you start from a request are listed here.</p>`}
     </section>
     ${closed.length ? `
     <section class="dash-section">
       <div class="section-head"><div><span class="eyebrow">Closed</span><h2>Finished projects</h2></div><span class="mono">${closed.length} closed</span></div>
-      ${projectTable(closed)}
+      ${projectTable(closed, approved)}
     </section>` : ""}
 
     <section class="dash-section">
@@ -501,11 +541,38 @@ app.addEventListener("click", async e => {
   }
   if (action === "decline-request" && !confirm(`Decline ${el.dataset.name}'s request? They'll get an email saying you can't take it on.`)) return;
   if (action === "project-status") return;
+  if (action === "manage") {
+    const row = app.querySelector(`[data-manage="${el.dataset.project}"]`);
+    row.hidden = !row.hidden;
+    el.textContent = row.hidden ? "Manage" : "Done";
+    return;
+  }
+  if (action === "show-notes") {
+    const form = el.closest(".card-body").querySelector('[data-form="notes"]');
+    form.hidden = false;
+    el.hidden = true;
+    form.elements.points.focus();
+    return;
+  }
+  if (action === "remove-member" && !confirm(`Take ${el.dataset.name} off this project? Their access to the repository is removed straight away.`)) return;
 
   if (action === "reject" && !confirm(`Reject ${el.dataset.name}? They'll get an email saying they weren't approved.`)) return;
 
   el.disabled = true;
   try {
+    if (["make-primary", "add-member", "remove-member", "sync-project"].includes(action)) {
+      const project = el.dataset.project;
+      const result = action === "make-primary" ? await source.setMember(project, el.dataset.id, "primary")
+        : action === "add-member" ? await source.setMember(project, el.closest(".row-actions").querySelector("[data-add-engineer]").value, "secondary")
+        : action === "remove-member" ? await source.removeMember(project, el.dataset.id)
+        : await source.syncProject(project);
+      if (result?.github === "failed") alert("Saved, but GitHub didn't respond. Use \"Sync with GitHub\" to try again in a minute.");
+      if (preview) { el.disabled = false; return; }
+      await load();
+      // Keep the project open where the admin was working.
+      app.querySelector(`[data-action="manage"][data-project="${project}"]`)?.click();
+      return;
+    }
     if (action === "decline-request") {
       await source.declineRequest(el.dataset.id);
       if (preview) { el.closest("[data-request]").remove(); return; }
@@ -542,13 +609,35 @@ app.addEventListener("change", async e => {
   if (status === "closed" && !confirm("Close this project? Engineers lose access to it, and it moves to finished work.")) return load();
   el.disabled = true;
   try {
-    await source.setProjectStatus(el.dataset.id, status);
+    const result = await source.setProjectStatus(el.dataset.id, status);
+    if (result?.github === "failed") alert("Saved, but GitHub didn't respond, so repository access may be out of date. Use \"Sync with GitHub\" under Manage to try again.");
     if (!preview) return load();
   } catch {
     alert("That didn't go through. Please try again.");
     if (!preview) return load();
   } finally {
     el.disabled = false;
+  }
+});
+
+app.addEventListener("submit", async e => {
+  if (e.target.dataset.form !== "notes") return;
+  e.preventDefault();
+  const form = e.target;
+  const note = form.querySelector(".form-msg");
+  const points = form.elements.points.value.split("\n").map(line => line.replace(/^[-*•]\s*/, "").trim()).filter(Boolean);
+  if (!points.length) { note.textContent = "Write at least one point."; return; }
+  if (points.length > 8) { note.textContent = "Eight points at most, so it stays readable."; return; }
+  const button = form.querySelector("button[type=submit]");
+  button.disabled = true;
+  try {
+    await source.addNotes(form.dataset.project, points);
+    form.reset();
+    note.textContent = preview ? "In the preview nothing is sent." : "Posted. The customer can see it now.";
+  } catch {
+    note.textContent = "That didn't go through. Please try again.";
+  } finally {
+    button.disabled = false;
   }
 });
 
@@ -564,7 +653,8 @@ app.addEventListener("submit", async e => {
   const button = form.querySelector("button[type=submit]");
   button.disabled = true;
   try {
-    await source.startProject({ requestId: form.dataset.id, name, stack: form.elements.stack.value.trim(), primaryId });
+    const result = await source.startProject({ requestId: form.dataset.id, name, stack: form.elements.stack.value.trim(), primaryId });
+    if (result?.github === "failed") alert("The project has started, but GitHub didn't respond, so its repository isn't made yet. Use \"Sync with GitHub\" under Manage to try again.");
     if (preview) { note.textContent = "In the preview nothing is saved, but this starts the project."; return; }
     return load();
   } catch {
