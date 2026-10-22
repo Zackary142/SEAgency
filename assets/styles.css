@@ -8,9 +8,26 @@
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
   --wide:1160px;
   --gl:max(20px,env(safe-area-inset-left,0px)); --gr:max(20px,env(safe-area-inset-right,0px));
+  --danger:#E8A3A3; --sunken:#131917; --rule-soft:#1B2220;
   color-scheme:dark;
 }
-/* Dark only by design: no light theme. */
+/* Light theme: same layout and accents, deepened so text keeps its contrast on paper. theme.js sets data-theme from the system setting or the bulb button; the media query covers pages without JS. */
+:root[data-theme="light"]{
+  --paper:#F5F7F5; --raised:#FFFFFF; --ink:#131A17; --muted:#4F5B56; --faint:#6A7570; --rule:#DCE2DF;
+  --accent:#1F7A55; --accent-ink:#FFFFFF; --branch:#A2611B;
+  --band:#E9F0EC; --band-ink:#131A17; --band-muted:#52615A; --band-rule:#CAD6D0; --band-field:#FFFFFF; --band-accent:#1F7A55;
+  --danger:#B3261E; --sunken:#F1F4F2; --rule-soft:#E7ECE9;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme]){
+    --paper:#F5F7F5; --raised:#FFFFFF; --ink:#131A17; --muted:#4F5B56; --faint:#6A7570; --rule:#DCE2DF;
+    --accent:#1F7A55; --accent-ink:#FFFFFF; --branch:#A2611B;
+    --band:#E9F0EC; --band-ink:#131A17; --band-muted:#52615A; --band-rule:#CAD6D0; --band-field:#FFFFFF; --band-accent:#1F7A55;
+    --danger:#B3261E; --sunken:#F1F4F2; --rule-soft:#E7ECE9;
+    color-scheme:light;
+  }
+}
 
 *{box-sizing:border-box}
 [id]{scroll-margin-top:24px}
@@ -33,6 +50,14 @@ p{margin:0}
 .top nav a{text-decoration:none;color:var(--muted);font-size:.95rem}
 .top nav a:hover{color:var(--ink)}
 .top nav .signin{color:var(--ink)}
+.theme-toggle{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid var(--rule);border-radius:3px;background:transparent;color:var(--muted);cursor:pointer}
+.theme-toggle:hover{color:var(--ink);border-color:var(--muted)}
+.theme-toggle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.theme-toggle .glass{fill:transparent}
+.theme-toggle .rays{display:none}
+[data-theme="light"] .theme-toggle{color:var(--branch)}
+[data-theme="light"] .theme-toggle .glass{fill:color-mix(in srgb,var(--branch) 22%,transparent)}
+[data-theme="light"] .theme-toggle .rays{display:inline}
 
 /* buttons: square-cornered, no pills */
 .btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;border-radius:3px;font:500 .98rem/1 var(--body);text-decoration:none;border:1px solid transparent;cursor:pointer;background:transparent;color:var(--ink);white-space:nowrap}
@@ -190,7 +215,7 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .callout{padding:14px 16px;background:var(--band);border:1px solid var(--band-rule);border-radius:3px;font-size:.94rem;display:grid;gap:4px}
 .callout .mono{color:var(--branch)}
 .form-msg{font-size:.92rem;color:var(--band-muted)}
-.form-msg.err{color:#E8A3A3}
+.form-msg.err{color:var(--danger)}
 [hidden]{display:none !important}
 
 /* privacy notice */
@@ -255,7 +280,7 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .manage{display:grid;gap:14px;padding:4px 0 8px}
 .manage-list{display:grid;gap:8px}
 .manage-person{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
-.table-wrap tr.manage-row td{border-top:0;background:#131917}
+.table-wrap tr.manage-row td{border-top:0;background:var(--sunken)}
 .table-wrap td.code a{color:var(--ink)}
 .status-select{padding:6px 10px;font-size:.88rem;width:auto}
 .table-wrap td.strong{color:var(--ink)}
@@ -266,7 +291,7 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .table-wrap table{width:100%;min-width:640px;border-collapse:collapse;font-size:.94rem}
 .table-wrap th{text-align:left;font:400 .75rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--band-muted);padding:12px 20px;border-bottom:1px solid var(--rule)}
 .table-wrap td{padding:14px 20px;color:var(--muted)}
-.table-wrap tr + tr td{border-top:1px solid #1B2220}
+.table-wrap tr + tr td{border-top:1px solid var(--rule-soft)}
 .table-wrap td.code{font-family:var(--mono);font-size:.8rem;color:var(--ink)}
 .table-wrap td.tag{font-family:var(--mono);font-size:.8rem;color:var(--accent)}
 .colleagues{border-top:1px solid var(--rule)}
