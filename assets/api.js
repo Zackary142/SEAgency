@@ -34,6 +34,7 @@ const API = (() => {
 
     projects: status => request("GET", `/projects?status=${status}`).then(data => data.projects),
     updates: projectId => request("GET", `/projects/${projectId}/updates`),
+    addNotes: (projectId, points) => request("POST", `/projects/${projectId}/updates`, { points }),
     colleagues: () => request("GET", "/projects/colleagues").then(data => data.projects),
     offerSupport: (projectId, message) => request("POST", `/projects/${projectId}/support-offers`, { message }),
     acceptOffer: (projectId, offerId) => request("POST", `/projects/${projectId}/support-offers/${offerId}/accept`),
@@ -48,6 +49,9 @@ const API = (() => {
     allProjects: () => request("GET", "/admin/projects").then(data => data.projects),
     startProject: body => request("POST", "/admin/projects", body),
     declineRequest: id => request("POST", `/admin/project-requests/${id}/decline`),
-    setProjectStatus: (id, status) => request("PATCH", `/admin/projects/${id}`, { status })
+    setProjectStatus: (id, status) => request("PATCH", `/admin/projects/${id}`, { status }),
+    setMember: (projectId, engineerId, role) => request("POST", `/admin/projects/${projectId}/members`, { engineerId, role }),
+    removeMember: (projectId, engineerId) => request("DELETE", `/admin/projects/${projectId}/members/${engineerId}`),
+    syncProject: projectId => request("POST", `/admin/projects/${projectId}/sync`)
   };
 })();

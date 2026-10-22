@@ -252,6 +252,11 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .offer{padding:14px 16px;background:var(--band);border:1px solid var(--band-rule);border-radius:3px;display:grid;gap:10px;font-size:.94rem}
 .offer q{color:var(--muted)}
 .start-form{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;padding-top:6px;border-top:1px solid var(--rule)}
+.manage{display:grid;gap:14px;padding:4px 0 8px}
+.manage-list{display:grid;gap:8px}
+.manage-person{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.table-wrap tr.manage-row td{border-top:0;background:#131917}
+.table-wrap td.code a{color:var(--ink)}
 .status-select{padding:6px 10px;font-size:.88rem;width:auto}
 .table-wrap td.strong{color:var(--ink)}
 .application{font-family:var(--mono);font-size:.875rem;line-height:1.6;color:var(--muted);max-width:62ch}
