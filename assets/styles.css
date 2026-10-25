@@ -50,8 +50,8 @@ p{margin:0}
 .top nav a{text-decoration:none;color:var(--muted);font-size:.95rem}
 .top nav a:hover{color:var(--ink)}
 .top nav .signin{color:var(--ink)}
-.theme-toggle{display:inline-grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid var(--rule);border-radius:3px;background:transparent;color:var(--muted);cursor:pointer}
-.theme-toggle:hover{color:var(--ink);border-color:var(--muted)}
+.theme-toggle{display:inline-grid;place-items:center;width:32px;height:32px;margin:-4px -6px -4px -4px;padding:0;border:0;background:none;color:var(--muted);cursor:pointer}
+.theme-toggle:hover{color:var(--ink)}
 .theme-toggle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .theme-toggle .glass{fill:transparent}
 .theme-toggle .rays{display:none}
