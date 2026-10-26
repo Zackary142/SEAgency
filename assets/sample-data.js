@@ -18,7 +18,7 @@ const SAMPLE = (() => {
       stagingUrl: "#",
       milestone: { current: 2, total: 4, next: { name: "Online deposits with Stripe", due: "2026-11-14" } },
       engineers: [
-        { displayName: "Zack", role: "primary", focus: "Primary engineer" },
+        { displayName: "Zack", role: "primary", focus: "Leading your project" },
         { displayName: "Priya Shah", role: "secondary", focus: "Supporting on payments" }
       ]
     }],

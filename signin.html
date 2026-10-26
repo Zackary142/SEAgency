@@ -11,12 +11,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=10">
+<link rel="stylesheet" href="assets/styles.css?v=11">
 <script src="assets/theme.js?v=1"></script>
 <script src="assets/site.config.js?v=5"></script>
 <script src="assets/main.js?v=5" defer></script>
 <script src="assets/api.js?v=8" defer></script>
-<script src="assets/signin.js?v=6" defer></script>
+<script src="assets/signin.js?v=7" defer></script>
 </head>
 <body data-page="Sign in">
 <header class="wrap">
@@ -31,14 +31,14 @@
 
 <main class="wrap">
   <div class="auth">
-    <div class="auth-copy">
-      <span class="eyebrow">Client workspace</span>
-      <h1 id="auth-title">Sign in to your workspace.</h1>
-      <p id="auth-intro">Clients and engineers sign in here. You will land on the dashboard for your account type.</p>
+    <div class="auth-copy client">
+      <span class="eyebrow">Your account</span>
+      <h1 id="auth-title">Sign in to your account.</h1>
+      <p id="auth-intro">Clients and engineers both sign in here, and you will go straight to the right page for you.</p>
       <ul class="plus">
-        <li>Clients see their own repositories and nothing else.</li>
+        <li>Clients only ever see their own projects.</li>
         <li>Engineer accounts are approved by hand before they get any access.</li>
-        <li>Sessions use a secure cookie. Nothing else about you is stored in your browser.</li>
+        <li>We only keep what is needed to keep you signed in. No tracking.</li>
       </ul>
     </div>
 
@@ -52,7 +52,7 @@
         <fieldset class="choice" data-register hidden>
           <legend>I am joining as</legend>
           <div class="choice-opts">
-            <label>A client<input type="radio" name="role" value="customer" checked><span>I want software built</span></label>
+            <label>A client<input type="radio" name="role" value="customer" checked><span>I need something built or fixed</span></label>
             <label>An engineer<input type="radio" name="role" value="engineer"><span>I want to work on projects</span></label>
           </div>
         </fieldset>

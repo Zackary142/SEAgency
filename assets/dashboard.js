@@ -84,59 +84,78 @@ function previewBar() {
 }
 
 /* ---------- customer ---------- */
+/* Clients are mostly not technical, so their pages talk about updates and stages,
+   not commits, branches and repositories. The .client wrapper swaps the mono labels
+   for plain text (see styles.css). */
+
+const teamLabel = role => (role === "primary" ? "Leading your project" : "Helping on your project");
+
+function progressBlock(project) {
+  const m = project.milestone;
+  const status = project.status === "paused"
+    ? '<span class="pill pill-paused">Paused</span>'
+    : '<span class="pill">In progress</span>';
+  if (!m) return `<div class="progress">${status}</div>`;
+  const pct = Math.round((m.current / m.total) * 100);
+  return `
+        <div class="progress">
+          ${status}
+          <span>Stage ${m.current} of ${m.total}</span>
+          <div class="progress-bar" role="img" aria-label="Stage ${m.current} of ${m.total}"><span style="width:${pct}%"></span></div>
+        </div>`;
+}
 
 function customerView(me, project, updates) {
   const latest = updates?.latest;
   const engineers = project.engineers.map(e =>
-    `<div class="person"><b>${esc(e.displayName)}</b><span>${esc(e.focus || roleLabel(e.role) + " engineer")}</span></div>`).join("");
+    `<div class="person"><b>${esc(e.displayName)}</b><span>${esc(e.focus || teamLabel(e.role))}</span></div>`).join("");
   const primary = project.engineers.find(e => e.role === "primary");
   const next = project.milestone?.next;
 
-  const commit = latest ? `
+  const update = latest ? `
       <div class="commit">
         <span class="dot" aria-hidden="true"></span>
         <div>
-          <span class="eyebrow dim">Latest commit</span>
+          <span class="eyebrow dim">Latest update</span>
           <h2>${esc(latest.message)}</h2>
-          <span class="mono">${esc(latest.sha)} &middot; ${esc(latest.author)} &middot; ${when(latest.committedAt)} &middot; merged into ${esc(latest.branch)}</span>
+          <span class="meta">From ${esc(firstName(latest.author))}, ${when(latest.committedAt)}</span>
         </div>
       </div>
       <div class="notes">
-        ${latest.points?.length ? `<span>Notes from ${esc(firstName(latest.notesBy || latest.author))} on this change</span>
-        <ul class="plus">${latest.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : `<span>No notes on this change yet.</span>`}
+        ${latest.points?.length ? `<span>What ${esc(firstName(latest.notesBy || latest.author))} says about it</span>
+        <ul class="bullets">${latest.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : `<span>Your team hasn't added notes to this update yet.</span>`}
         <div class="actions">
-          ${project.stagingUrl ? `<a class="btn btn-primary" href="${esc(project.stagingUrl)}">Try it on staging <span class="arrow">&rarr;</span></a>` : ""}
+          ${project.stagingUrl ? `<a class="btn btn-primary" href="${esc(project.stagingUrl)}">See it in action <span class="arrow">&rarr;</span></a>` : ""}
           ${primary ? `<a class="btn btn-quiet" href="mailto:${esc(SITE.email)}">Reply to ${esc(firstName(primary.displayName))}</a>` : ""}
         </div>
       </div>` : `
-      <div class="commit"><span class="dot empty" aria-hidden="true"></span><div><h2>No commits yet</h2><p>Your engineer's first changes will show up here, with notes on what they did.</p></div></div>`;
+      <div class="commit"><span class="dot empty" aria-hidden="true"></span><div><h2>No updates yet</h2><p>As soon as your team starts building, each step they finish shows up here with a short note on what changed.</p></div></div>`;
 
   const earlier = updates?.earlier?.length ? `
       <div class="earlier">
-        <span class="eyebrow dim">Earlier</span>
-        ${updates.earlier.map(c => `<div class="row"><span>${esc(c.sha)}</span><span>${esc(c.message)}</span><span>${when(c.committedAt)}</span></div>`).join("")}
+        <span class="eyebrow dim">Earlier updates</span>
+        ${updates.earlier.map(c => `<div class="row"><span>${esc(c.message)}</span><span>${when(c.committedAt)}</span></div>`).join("")}
       </div>` : "";
 
   return `
+    <div class="client">
     <div class="page-head"><span class="eyebrow">Your project</span><h1>${esc(project.name)}</h1></div>
     <div class="split">
       <div class="split-main panel">
-        <div class="panel-head">
-          <span>${project.repo ? `${esc(project.repo.fullName)} <span class="dim">&middot; private</span>` : `<span class="dim">repository being set up</span>`}</span>
-          <span>${project.status === "paused" ? '<span class="sec">Paused</span>' : '<span class="ok">In progress</span>'}${project.milestone ? ` &middot; milestone ${project.milestone.current} of ${project.milestone.total}` : ""}</span>
-        </div>
-        ${commit}
+        ${progressBlock(project)}
+        ${update}
         ${earlier}
       </div>
       <div class="split-side">
-        <div class="side-block"><span class="eyebrow">Your engineers</span>${engineers}</div>
-        ${next ? `<div class="side-block"><span class="eyebrow">Next milestone</span><div class="person"><b>${esc(next.name)}</b><span>Due ${day(next.due)}</span></div></div>` : ""}
+        <div class="side-block"><span class="eyebrow">Your team</span>${engineers}</div>
+        ${next ? `<div class="side-block"><span class="eyebrow">Coming next</span><div class="person"><b>${esc(next.name)}</b><span>Due ${day(next.due)}</span></div></div>` : ""}
         <div class="side-block side-links">
-          ${project.repo?.url ? `<a href="${esc(project.repo.url)}">Open the repository on GitHub</a>` : ""}
-          <a href="#request" data-action="show-request">Request another project</a>
+          <a href="#request" data-action="show-request">Ask for something new</a>
+          ${project.repo?.url ? `<a class="quiet-link" href="${esc(project.repo.url)}">View the code on GitHub <span>(for your IT team)</span></a>` : ""}
         </div>
         <div class="side-block" id="request" hidden>${requestForm()}</div>
       </div>
+    </div>
     </div>`;
 }
 
@@ -164,10 +183,10 @@ function requestsBlock(requests) {
 
 function customerEmptyView(me, requests = []) {
   const asks = [
-    ["A web application", "a customer portal, booking system or internal tool"],
-    ["Cloud and infrastructure", "hosting, deploys, monitoring or a cost review"],
-    ["A SaaS product", "accounts, billing and admin for something you sell"],
-    ["Maintenance and support", "fixes and small features on software you already have"]
+    ["A website or web app", "a customer portal, booking system or tool for your staff"],
+    ["Hosting and reliability", "keeping your site fast and online, or cutting what you pay to run it"],
+    ["Software you sell", "sign-ups, payments and an admin area for your own online product"],
+    ["Help with what you have", "fixes and small improvements to software you already use"]
   ];
   const examples = [
     "Customers should be able to get a quote for a fitted wardrobe online and pay a deposit.",
@@ -175,26 +194,26 @@ function customerEmptyView(me, requests = []) {
     "We track jobs in a spreadsheet. We want a simple app the fitters can update from their phones."
   ];
   return `
-    <div class="page-head"><span class="eyebrow">Your project</span><h1>Welcome, ${esc(firstName(me.displayName))}.</h1></div>
+    <div class="client">
+    <div class="page-head"><span class="eyebrow">Welcome</span><h1>Hello, ${esc(firstName(me.displayName))}.</h1></div>
     <div class="split">
       <div class="split-main panel">
-        <div class="panel-head"><span class="dim">no repository yet</span><span class="dim">0 open projects</span></div>
         <div class="commit">
           <span class="dot empty" aria-hidden="true"></span>
           <div>
-            <h2>Request a project</h2>
-            <p>Tell us what you need in a few sentences. We reply within one working day with a time for a scoping call, and your private repository appears here once the work starts.</p>
+            <h2>Tell us about your project</h2>
+            <p>Describe what you need in a few sentences, in your own words. We reply within one working day to arrange a free call, and once the work starts you can follow its progress right here.</p>
           </div>
         </div>
         <div class="notes">
-          <span>What you can ask for</span>
-          <ul class="plus">${asks.map(([t, b]) => `<li><span><b>${t}</b><span class="who">, ${b}</span></span></li>`).join("")}</ul>
+          <span>Things we can help with</span>
+          <ul class="bullets">${asks.map(([t, b]) => `<li><span><b>${t}</b><span class="who">: ${b}</span></span></li>`).join("")}</ul>
         </div>
         <div class="notes">
-          <span>Example requests from other clients</span>
-          <ul class="plus">${examples.map(e => `<li class="quote">&ldquo;${e}&rdquo;</li>`).join("")}</ul>
+          <span>What other clients have asked for</span>
+          <ul class="bullets">${examples.map(e => `<li class="quote">&ldquo;${e}&rdquo;</li>`).join("")}</ul>
           <div class="actions">
-            <a class="btn btn-primary" href="#request" data-action="show-request">Request a project <span class="arrow">&rarr;</span></a>
+            <a class="btn btn-primary" href="#request" data-action="show-request">Tell us what you need <span class="arrow">&rarr;</span></a>
             <a class="btn btn-quiet" href="index.html#contact">Book a call instead</a>
           </div>
           <div id="request" hidden>${requestForm()}</div>
@@ -202,16 +221,17 @@ function customerEmptyView(me, requests = []) {
       </div>
       <div class="split-side">
         <div class="side-block">
-          <span class="eyebrow">What happens next</span>
+          <span class="eyebrow">How it works</span>
           <ol class="steps-sm">
-            <li><span class="mono">01</span><span>A 30 minute scoping call, free</span></li>
-            <li><span class="mono">02</span><span>A fixed proposal, paid per milestone</span></li>
-            <li><span class="mono">03</span><span>Your repository and engineer appear here</span></li>
+            <li><span class="num">1</span><span>A free 30 minute call to talk it through</span></li>
+            <li><span class="num">2</span><span>A fixed price, paid in stages as the work is done</span></li>
+            <li><span class="num">3</span><span>Your team and their progress updates appear here</span></li>
           </ol>
         </div>
         ${requestsBlock(requests)}
-        <div class="side-block"><span class="eyebrow">Past projects</span><p>Finished projects stay listed here with their repository.</p></div>
+        <div class="side-block"><span class="eyebrow">Past projects</span><p>Finished projects stay listed here so you can look back at them.</p></div>
       </div>
+    </div>
     </div>`;
 }
 
@@ -480,7 +500,8 @@ async function load() {
     if (API.notBuilt(err)) { notLive(); return; }
     throw err;
   }
-  document.getElementById("who").textContent = me.companyName ? `${me.displayName}, ${me.companyName}` : `${me.displayName}, ${me.role}`;
+  document.getElementById("who").textContent = me.companyName ? `${me.displayName}, ${me.companyName}`
+    : me.role === "customer" ? me.displayName : `${me.displayName}, ${me.role}`;
 
   if (me.role === "customer") {
     const projects = await source.projects("active");
