@@ -1,6 +1,6 @@
 # SEAgency
 
-Frontend for the software engineering studio, provisionally named **ForkLine**. This is a static site for now (plain HTML, CSS and JS) with no build step.
+Frontend for the software engineering studio, provisionally named **Patchwick**. This is a static site for now (plain HTML, CSS and JS) with no build step.
 
 The backend lives in the private `SEAgency-API` repository. Anything that needs secrets (accounts, the enquiry form, repo access) goes there, never here.
 
@@ -19,7 +19,7 @@ The name is provisional. To change it:
 1. Edit `name` (and `email`) in `assets/site.config.js`. The page fills every brand slot from this at load time.
 2. Update the fallback text that search engines see before scripts run:
    ```sh
-   grep -rl "ForkLine" *.html | xargs sed -i 's/ForkLine/NewName/g'
+   grep -rl "Patchwick" *.html | xargs sed -i 's/Patchwick/NewName/g'
    ```
 
 ## Structure
