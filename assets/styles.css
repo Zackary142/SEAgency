@@ -81,10 +81,11 @@ p{margin:0}
 .log-body svg{width:48px;height:216px;display:block}
 .log-rows{display:grid;grid-auto-rows:36px;min-width:0}
 .log-rows div{display:flex;align-items:center;gap:12px;white-space:nowrap;min-width:0}
+.log-rows .sha,.log-rows .tag{flex:0 0 52px}
 .log-rows .sha{color:var(--faint)}
-.log-rows .msg{color:var(--ink);overflow:hidden;text-overflow:ellipsis}
+.log-rows .msg{color:var(--ink);overflow:hidden;text-overflow:ellipsis;font-size:.94rem}
 .log-rows .tag{color:var(--accent);font-weight:500}
-.log-note{padding:0 16px 14px;color:var(--faint)}
+.log-note{padding:0 16px 14px;font-size:.88rem;color:var(--faint)}
 .graph .main{stroke:var(--accent)} .graph .feat{stroke:var(--branch)}
 .graph path{fill:none;stroke-width:2}
 .graph circle{stroke-width:2;fill:var(--raised)}
@@ -257,6 +258,29 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .steps-sm{margin:0;padding:0;list-style:none;display:grid;gap:12px;font-size:.94rem}
 .steps-sm li{display:grid;grid-template-columns:28px 1fr;gap:6px}
 .steps-sm .mono{color:var(--faint)}
+
+/* customer pages: plain labels and body text instead of the mono, engineer-style details */
+.page > .client{display:contents}
+/* forms and labels on the page itself (not in the dark contact band) follow the page colours, so light mode gets light fields */
+.client,.auth-card{--band:var(--sunken);--band-field:var(--sunken);--band-ink:var(--ink);--band-muted:var(--muted);--band-rule:var(--rule)}
+.client .side-block .eyebrow{color:var(--muted)}
+.client .eyebrow{font-family:var(--body);font-size:.9rem;font-weight:600;letter-spacing:0;text-transform:none}
+.client .commit .meta{font-size:.94rem;color:var(--muted)}
+.client .notes > span{font-weight:600;color:var(--ink)}
+.bullets{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.bullets li{display:grid;grid-template-columns:16px 1fr;gap:10px}
+.bullets li::before{content:"";width:7px;height:7px;margin-top:.62em;border-radius:50%;background:var(--accent)}
+.bullets .quote{font-style:italic;color:var(--muted)}
+.client .earlier .row{grid-template-columns:minmax(0,1fr) auto;font-family:var(--body);font-size:.94rem}
+.client .earlier .row span:first-child{color:var(--ink)}
+.client .steps-sm .num{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--sunken);border:1px solid var(--rule);font-size:.8rem;font-weight:600;color:var(--accent)}
+.client .quiet-link{color:var(--muted)}
+.client .quiet-link span{color:var(--faint)}
+.progress{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:16px 24px;border-bottom:1px solid var(--rule);font-size:.94rem;color:var(--muted)}
+.progress-bar{flex:1 1 160px;height:8px;border-radius:99px;background:var(--sunken);border:1px solid var(--rule);overflow:hidden}
+.progress-bar span{display:block;height:100%;background:var(--accent);border-radius:99px}
+.pill{padding:3px 12px;border-radius:99px;font-size:.85rem;font-weight:600;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}
+.pill-paused{background:color-mix(in srgb,var(--branch) 18%,transparent);color:var(--branch)}
 .request-form{display:grid;gap:12px;padding-top:4px}
 .request-form textarea{min-height:110px}
 

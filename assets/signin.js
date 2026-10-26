@@ -14,12 +14,12 @@ document.getElementById("forgot").href = `mailto:${SITE.email}?subject=Password%
 
 const copy = {
   signin: {
-    title: "Sign in to your workspace.",
-    intro: "Clients and engineers sign in here. You will land on the dashboard for your account type."
+    title: "Sign in to your account.",
+    intro: "Clients and engineers both sign in here, and you will go straight to the right page for you."
   },
   register: {
     title: "Create your account.",
-    intro: "One account type for clients and one for engineers. Pick the one that fits and we will set up the right dashboard."
+    intro: "Tell us whether you are a client or an engineer and we will set up the right account for you."
   }
 };
 

@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Patchwick | Software engineering studio</title>
-<meta name="description" content="A software engineering studio that designs, builds and runs web applications and cloud systems, delivered into a private repository you own.">
+<meta name="description" content="A small software engineering studio that builds websites, apps and online systems for businesses, keeps them running, and shows you every step of the work.">
 <meta name="theme-color" content="#172B2A">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="assets/styles.css?v=10">
+<link rel="stylesheet" href="assets/styles.css?v=12">
 <script src="assets/theme.js?v=1"></script>
 <script src="assets/site.config.js?v=5"></script>
 <script src="assets/main.js?v=5" defer></script>
@@ -25,7 +25,7 @@
     <nav aria-label="Main">
       <a class="hide-sm" href="#services">Services</a>
       <a class="hide-sm" href="#process">Process</a>
-      <a class="hide-sm" href="#workspace">Client workspace</a>
+      <a class="hide-sm" href="#workspace">Client area</a>
       <a class="signin" href="signin.html">Sign in</a>
     </nav>
   </div>
@@ -35,16 +35,16 @@
   <div class="wrap">
     <div class="grid hero">
       <div class="hero-copy">
-        <h1>Software, built in a repository you own.</h1>
-        <p class="lede"><span data-brand>Patchwick</span> is a software engineering studio. We design, build and run web applications and cloud systems for businesses, and every line of work lands in your own private repository where you can see it.</p>
+        <h1>Software for your business, built where you can see it.</h1>
+        <p class="lede"><span data-brand>Patchwick</span> is a small team of software engineers. We build websites, apps and online systems for businesses and keep them running. You can follow every step as it happens, in plain English, and everything we build is yours from day one.</p>
         <div class="actions">
           <a class="btn btn-primary" href="#contact">Start a project <span class="arrow">&rarr;</span></a>
           <a class="btn btn-quiet" href="#process">How we work</a>
         </div>
       </div>
       <div class="hero-log">
-        <div class="log" role="img" aria-label="Example git history of a client project, showing a feature branch merged into main and released as version 1.0">
-          <div class="log-head mono"><span>acme-booking</span><span>git log --graph</span></div>
+        <div class="log" role="img" aria-label="An example project timeline, from plan agreed in week 1 to live on the client's website in week 5">
+          <div class="log-head"><span>An example project</span><span class="mono">git log --graph</span></div>
           <div class="log-body">
             <svg class="graph" viewBox="0 0 48 216" aria-hidden="true">
               <path class="main" d="M14 18V198"/>
@@ -56,16 +56,16 @@
               <circle class="main" cx="14" cy="162" r="5"/>
               <circle class="main fill" cx="14" cy="198" r="5"/>
             </svg>
-            <div class="log-rows mono">
-              <div><span class="sha">a1f3c0e</span><span class="msg">Scope signed off</span></div>
-              <div><span class="sha">7d2e91b</span><span class="msg">Booking flow and availability API</span></div>
-              <div><span class="sha">c04b5a2</span><span class="msg">Stripe checkout in test mode</span></div>
-              <div><span class="sha">e19f07d</span><span class="msg">Staging deploy for client review</span></div>
-              <div><span class="sha">3b8d22f</span><span class="msg">Merge feature/booking</span></div>
-              <div><span class="tag">v1.0.0</span><span class="msg">Live on client domain</span></div>
+            <div class="log-rows">
+              <div><span class="sha mono">week 1</span><span class="msg">Plan and price agreed</span></div>
+              <div><span class="sha mono">week 2</span><span class="msg">Online booking page built</span></div>
+              <div><span class="sha mono">week 3</span><span class="msg">Card payments added</span></div>
+              <div><span class="sha mono">week 4</span><span class="msg">Preview sent to you</span></div>
+              <div><span class="sha mono">week 5</span><span class="msg">Your feedback added</span></div>
+              <div><span class="tag mono">v1.0</span><span class="msg">Live on your website</span></div>
             </div>
           </div>
-          <p class="log-note mono">Example project history</p>
+          <p class="log-note">Each dot is an update you can see in your client area.</p>
         </div>
       </div>
     </div>
@@ -75,29 +75,29 @@
     <section id="services" class="grid">
       <div class="sec-head">
         <span class="mono">Services</span>
-        <h2>Four kinds of work, done properly.</h2>
-        <p>We take on projects where good engineering makes a visible difference to the business.</p>
+        <h2>Four ways we can help.</h2>
+        <p>Whether you are starting from scratch or need help with something you already have.</p>
       </div>
       <div class="sec-body services">
         <div class="service">
-          <h3>Web applications</h3>
-          <p>Customer portals, booking systems, internal tools and dashboards, built to be maintained by whoever comes next.</p>
-          <span class="mono">TypeScript &middot; React &middot; Node &middot; PostgreSQL</span>
+          <h3>Websites and web apps</h3>
+          <p>Booking systems, customer portals, online quotes and tools for your staff, built so anyone can look after them later.</p>
+          <span class="mono">bookings &middot; quotes &middot; customer logins</span>
         </div>
         <div class="service">
-          <h3>Cloud and infrastructure</h3>
-          <p>Hosting, CI/CD pipelines, monitoring and cost reviews on AWS and Azure, set up as code so nothing lives in someone's head.</p>
-          <span class="mono">Terraform &middot; Docker &middot; GitHub Actions</span>
+          <h3>Hosting and reliability</h3>
+          <p>Keeping your website fast, secure and online, with backups and alerts if anything goes wrong. We can often cut what you pay to run it, too.</p>
+          <span class="mono">uptime &middot; backups &middot; lower bills</span>
         </div>
         <div class="service">
-          <h3>SaaS products</h3>
-          <p>From first version to paying customers: accounts, billing, permissions and the admin tools you need to run it.</p>
-          <span class="mono">Auth &middot; Stripe &middot; multi-tenant data</span>
+          <h3>Your own online product</h3>
+          <p>Turning an idea into software people pay for, with sign-ups, payments and the admin tools you need to run it.</p>
+          <span class="mono">sign-ups &middot; payments &middot; admin</span>
         </div>
         <div class="service">
           <h3>Maintenance and support</h3>
-          <p>A monthly retainer for updates, fixes and small features on software you already have, whoever originally built it.</p>
-          <span class="mono">Fixed monthly hours &middot; response within one working day</span>
+          <p>A set number of hours each month for updates, fixes and small improvements, whoever built your software originally.</p>
+          <span class="mono">monthly hours &middot; reply within one working day</span>
         </div>
       </div>
     </section>
@@ -105,27 +105,27 @@
     <section id="process" class="grid">
       <div class="sec-head">
         <span class="mono">Process</span>
-        <h2>From first call to live software.</h2>
+        <h2>From first chat to launch day.</h2>
         <p>Every project follows the same four steps, so you always know where it stands and what happens next.</p>
       </div>
       <div class="sec-body">
         <ol class="steps">
           <li class="step">
-            <div class="step-top"><span class="mono">01</span><h3>Scoping call</h3></div>
-            <p>A 30 minute call about what you need, who will use it and what it has to connect to. No charge, and no obligation afterwards.</p>
+            <div class="step-top"><span class="mono">01</span><h3>Free call</h3></div>
+            <p>A 30 minute chat about what you need and who will use it. No charge, and no obligation afterwards.</p>
           </li>
           <li class="step">
-            <div class="step-top"><span class="mono">02</span><h3>Fixed proposal</h3></div>
-            <p>A written scope with a fixed price and timeline, broken into milestones. You pay per milestone, so you never pay for work you have not seen.</p>
+            <div class="step-top"><span class="mono">02</span><h3>Fixed price</h3></div>
+            <p>A written plan with a fixed price and timeline, split into stages. You pay as each stage is done, so you never pay for work you have not seen.</p>
           </li>
           <li class="step branch">
-            <div class="step-top"><span class="mono">03</span><h3>Build in your repository</h3></div>
-            <p>Each feature is built on its own branch and reviewed before it merges. You get a staging link to try every change before it goes live.</p>
-            <span class="mono detail">feature branches &middot; code review &middot; weekly staging release</span>
+            <div class="step-top"><span class="mono">03</span><h3>We build, you preview</h3></div>
+            <p>We build in small pieces, check each one twice, and send you a preview link so you can try every change before it goes live.</p>
+            <span class="mono detail">small steps &middot; checked twice &middot; weekly preview</span>
           </li>
           <li class="step">
             <div class="step-top"><span class="mono">04</span><h3>Launch and handover</h3></div>
-            <p>We deploy to your domain and hand over the code, documentation and access. Keep us on a support retainer or take it in-house. Either way, it is yours.</p>
+            <p>We put it live on your website and hand over everything: the code, instructions and logins. Keep us on for support or take it in-house. Either way, it is yours.</p>
           </li>
         </ol>
       </div>
@@ -133,41 +133,41 @@
 
     <section id="workspace" class="grid">
       <div class="sec-head">
-        <span class="mono">Client workspace</span>
-        <h2>One place to follow your project.</h2>
-        <p>Clients get an account with their own private repositories. Engineers only see the projects they are assigned to.</p>
+        <span class="mono">Client area</span>
+        <h2>Follow your project as it happens.</h2>
+        <p>Every client gets their own sign-in to see progress, updates and who is working on what. No technical knowledge needed.</p>
         <p class="status mono">In development</p>
       </div>
       <div class="sec-body workspace">
         <div class="ws-points">
           <div>
             <h3>Private by default</h3>
-            <p>Each client's code sits in its own repository, invisible to everyone who is not working on it.</p>
+            <p>Your project is only visible to you and the people working on it.</p>
           </div>
           <div>
             <h3>Vetted engineers</h3>
-            <p>Engineer accounts are reviewed and approved individually before they can be given any access.</p>
+            <p>Every engineer is checked and approved by us before they can work on anything.</p>
           </div>
           <div>
-            <h3>Access you control</h3>
-            <p>See who is on your project, what they changed and when. Access ends when the work does.</p>
+            <h3>You stay in control</h3>
+            <p>See who is on your project and what they have done. Their access ends when the work does.</p>
           </div>
         </div>
         <div class="roles">
           <div class="role">
             <span class="mono">Client account</span>
             <ul>
-              <li>Private repositories for each project</li>
-              <li>Milestones, invoices and staging links</li>
-              <li>A named engineer for every project</li>
+              <li>Progress updates in plain English</li>
+              <li>Stages, invoices and preview links</li>
+              <li>A named person leading your project</li>
             </ul>
           </div>
           <div class="role">
             <span class="mono">Engineer account</span>
             <ul>
-              <li>Approved by hand before activation</li>
-              <li>Access only to assigned client repositories</li>
-              <li>Every change reviewed before it merges</li>
+              <li>Approved by hand before they start</li>
+              <li>Only see the projects they are assigned to</li>
+              <li>Every change checked before it goes live</li>
             </ul>
           </div>
         </div>
@@ -177,11 +177,11 @@
     <section id="about" class="grid">
       <div class="sec-head">
         <span class="mono">Who you work with</span>
-        <h2>Engineers who have run software in production.</h2>
+        <h2>Engineers who have run real software, at scale.</h2>
       </div>
       <div class="sec-body founder">
         <p class="big"><span data-brand>Patchwick</span> was started by Zack, a software engineer with over a year of cloud engineering at one of the UK's leading telecoms businesses, and the founder of an independent SaaS product.</p>
-        <p>That background shapes how we work. Infrastructure is written as code, releases are small and reversible, and the people paying for the software can always see what is happening to it. As the studio grows, every engineer who joins is held to the same standard.</p>
+        <p>That background shapes how we work. Changes go out in small, safe steps that can be undone, everything is written down so nothing depends on one person, and you can always see what is happening. As the studio grows, every engineer who joins is held to the same standard.</p>
         <div class="facts">
           <div><b>Cloud</b><span>Enterprise cloud engineering at a UK telecoms operator</span></div>
           <div><b>Product</b><span>Founder of a SaaS product running in production</span></div>
@@ -196,8 +196,8 @@
       <section id="contact" class="grid">
         <div class="sec-head">
           <span class="mono">Start a project</span>
-          <h2>Tell us what you need built.</h2>
-          <p>We reply within one working day with a time for a scoping call.</p>
+          <h2>Tell us what you need.</h2>
+          <p>We reply within one working day to arrange a free call.</p>
           <p class="contact-mail" data-brand-email>hello@patchwick.com</p>
         </div>
         <div class="sec-body">
