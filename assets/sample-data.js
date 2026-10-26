@@ -105,14 +105,14 @@ const SAMPLE = (() => {
     allProjects: [
       { id: "p-northgate", name: "Online booking for Northgate Dental", customer: { displayName: "Hannah Cole", companyName: "Northgate Dental" },
         primary: { id: "e-zack", displayName: "Zack" }, secondaries: 1, status: "active", createdAt: daysAgo(34),
-        repo: { fullName: "forkline-clients/online-booking-for-northgate-dental", url: "#" },
+        repo: { fullName: "patchwick-clients/online-booking-for-northgate-dental", url: "#" },
         engineers: [{ id: "e-zack", displayName: "Zack", role: "primary" }, { id: "e-priya", displayName: "Priya Shah", role: "secondary" }] },
       { id: "p-ledger", name: "Ledger sync", customer: { displayName: "Owen Price", companyName: "Bright Ledger" },
         primary: { id: "e-tom", displayName: "Tom Reid" }, secondaries: 0, status: "paused", createdAt: daysAgo(61),
         repo: null, engineers: [{ id: "e-tom", displayName: "Tom Reid", role: "primary" }] },
       { id: "p-harbour", name: "Harbour Coffee loyalty app", customer: { displayName: "Mia Lewis", companyName: "Harbour Coffee" },
         primary: { id: "e-priya", displayName: "Priya Shah" }, secondaries: 1, status: "closed", createdAt: daysAgo(150),
-        repo: { fullName: "forkline-clients/harbour-coffee-loyalty", url: "#" },
+        repo: { fullName: "patchwick-clients/harbour-coffee-loyalty", url: "#" },
         engineers: [{ id: "e-priya", displayName: "Priya Shah", role: "primary" }, { id: "e-tom", displayName: "Tom Reid", role: "secondary" }] }
     ],
     engineers: {
