@@ -81,10 +81,11 @@ p{margin:0}
 .log-body svg{width:48px;height:216px;display:block}
 .log-rows{display:grid;grid-auto-rows:36px;min-width:0}
 .log-rows div{display:flex;align-items:center;gap:12px;white-space:nowrap;min-width:0}
+.log-rows .sha,.log-rows .tag{flex:0 0 52px}
 .log-rows .sha{color:var(--faint)}
-.log-rows .msg{color:var(--ink);overflow:hidden;text-overflow:ellipsis}
+.log-rows .msg{color:var(--ink);overflow:hidden;text-overflow:ellipsis;font-size:.94rem}
 .log-rows .tag{color:var(--accent);font-weight:500}
-.log-note{padding:0 16px 14px;color:var(--faint)}
+.log-note{padding:0 16px 14px;font-size:.88rem;color:var(--faint)}
 .graph .main{stroke:var(--accent)} .graph .feat{stroke:var(--branch)}
 .graph path{fill:none;stroke-width:2}
 .graph circle{stroke-width:2;fill:var(--raised)}
