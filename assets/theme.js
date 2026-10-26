@@ -8,7 +8,7 @@
   function apply(theme) {
     root.dataset.theme = theme;
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = theme === "light" ? "#F5F7F5" : "#0F1312";
+    if (meta) meta.content = theme === "light" ? "#F3F0E8" : "#172B2A";
     const btn = document.getElementById("theme-toggle");
     if (btn) {
       const next = theme === "light" ? "dark" : "light";

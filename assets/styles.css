@@ -1,30 +1,30 @@
 /* Layout: a 12-column grid with one left edge for every heading; the "fork line" (a git branch that splits and merges) is the single graphic device, used in the hero log and the process rail */
 :root{
-  --paper:#0F1312; --raised:#151B19; --ink:#E6EBE8; --muted:#9BA6A1; --faint:#6F7A75; --rule:#232B28;
-  --accent:#74C6A3; --accent-ink:#0B1712; --branch:#D9A35E;
-  --band:#0B1814; --band-ink:#E7EDEA; --band-muted:#8E9E97; --band-rule:#1F2F29; --band-field:#10201B; --band-accent:#74C6A3;
+  --paper:#172B2A; --raised:#1E3533; --ink:#F3F0E8; --muted:#B7BCB4; --faint:#97A29C; --rule:#2C4341;
+  --accent:#8FB5A7; --accent-ink:#172B2A; --branch:#D5A875;
+  --band:#11211F; --band-ink:#F3F0E8; --band-muted:#A9B3AD; --band-rule:#263C39; --band-field:#172B2A; --band-accent:#8FB5A7;
   --display:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
   --body:"Hanken Grotesk","Helvetica Neue",Arial,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
   --wide:1160px;
   --gl:max(20px,env(safe-area-inset-left,0px)); --gr:max(20px,env(safe-area-inset-right,0px));
-  --danger:#E8A3A3; --sunken:#131917; --rule-soft:#1B2220;
+  --danger:#E8A3A3; --sunken:#1A302E; --rule-soft:#243B39;
   color-scheme:dark;
 }
 /* Light theme: same layout and accents, deepened so text keeps its contrast on paper. theme.js sets data-theme from the system setting or the bulb button; the media query covers pages without JS. */
 :root[data-theme="light"]{
-  --paper:#F5F7F5; --raised:#FFFFFF; --ink:#131A17; --muted:#4F5B56; --faint:#6A7570; --rule:#DCE2DF;
-  --accent:#1F7A55; --accent-ink:#FFFFFF; --branch:#A2611B;
-  --band:#E9F0EC; --band-ink:#131A17; --band-muted:#52615A; --band-rule:#CAD6D0; --band-field:#FFFFFF; --band-accent:#1F7A55;
-  --danger:#B3261E; --sunken:#F1F4F2; --rule-soft:#E7ECE9;
+  --paper:#F3F0E8; --raised:#FBF9F4; --ink:#172B2A; --muted:#303B39; --faint:#5E6966; --rule:#DDD8CB;
+  --accent:#4B6F64; --accent-ink:#FFFFFF; --branch:#8A6330;
+  --band:#172B2A; --band-ink:#F3F0E8; --band-muted:#B7BCB4; --band-rule:#2C4341; --band-field:#1E3533; --band-accent:#8FB5A7;
+  --danger:#B3261E; --sunken:#EDE9DF; --rule-soft:#E7E2D6;
   color-scheme:light;
 }
 @media (prefers-color-scheme:light){
   :root:not([data-theme]){
-    --paper:#F5F7F5; --raised:#FFFFFF; --ink:#131A17; --muted:#4F5B56; --faint:#6A7570; --rule:#DCE2DF;
-    --accent:#1F7A55; --accent-ink:#FFFFFF; --branch:#A2611B;
-    --band:#E9F0EC; --band-ink:#131A17; --band-muted:#52615A; --band-rule:#CAD6D0; --band-field:#FFFFFF; --band-accent:#1F7A55;
-    --danger:#B3261E; --sunken:#F1F4F2; --rule-soft:#E7ECE9;
+    --paper:#F3F0E8; --raised:#FBF9F4; --ink:#172B2A; --muted:#303B39; --faint:#5E6966; --rule:#DDD8CB;
+    --accent:#4B6F64; --accent-ink:#FFFFFF; --branch:#8A6330;
+    --band:#172B2A; --band-ink:#F3F0E8; --band-muted:#B7BCB4; --band-rule:#2C4341; --band-field:#1E3533; --band-accent:#8FB5A7;
+    --danger:#B3261E; --sunken:#EDE9DF; --rule-soft:#E7E2D6;
     color-scheme:light;
   }
 }
@@ -178,8 +178,8 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .page h1{font-size:clamp(2rem,1.5rem + 1.4vw,2.4rem);line-height:1.1}
 .page-head{display:grid;gap:10px}
 .preview-bar{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;padding:10px 14px;border:1px solid var(--band-rule);background:var(--band);border-radius:3px;font-size:.92rem;color:var(--band-muted)}
-.preview-bar a{color:var(--ink)}
-.preview-bar a[aria-current]{color:var(--accent);text-decoration:none}
+.preview-bar a{color:var(--band-ink)}
+.preview-bar a[aria-current]{color:var(--band-accent);text-decoration:none}
 
 .plus{margin:0;padding:0;list-style:none;display:grid;gap:10px}
 .plus li{display:grid;grid-template-columns:16px 1fr;gap:10px}
