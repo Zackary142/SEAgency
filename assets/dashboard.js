@@ -116,7 +116,8 @@ function progressBlock(project) {
     ? '<span class="pill pill-paused">Paused</span>'
     : '<span class="pill">In progress</span>';
   if (!m) return `<div class="progress">${status}</div>`;
-  const pct = Math.round((m.current / m.total) * 100);
+  // The API says how many stages are paid for; sample data only has the current stage.
+  const pct = Math.round(((m.done ?? m.current) / m.total) * 100);
   return `
         <div class="progress">
           ${status}
@@ -168,7 +169,7 @@ function customerView(me, project, updates) {
       </div>
       <div class="split-side">
         <div class="side-block"><span class="eyebrow">Your team</span>${engineers}</div>
-        ${next ? `<div class="side-block"><span class="eyebrow">Coming next</span><div class="person"><b>${esc(next.name)}</b><span>Due ${day(next.due)}</span></div></div>` : ""}
+        ${next ? `<div class="side-block"><span class="eyebrow">Coming next</span><div class="person"><b>${esc(next.name)}</b>${next.due ? `<span>Due ${day(next.due)}</span>` : ""}</div></div>` : ""}
         <div class="side-block side-links">
           ${project.engineers.length ? `<a href="${chatHref(project.id)}">Message your team</a>` : ""}
           <a href="#request" data-action="show-request">Ask for something new</a>
@@ -459,7 +460,7 @@ function adminView(me, requests, projects, pending, approved, rejected) {
   const closed = projects.filter(p => p.status === "closed");
   return `
     <div class="page-head"><span class="eyebrow">Admin</span><h1>Welcome back, ${esc(firstName(me.displayName))}.</h1>
-      <p class="who">${requests.length} new ${requests.length === 1 ? "request" : "requests"} &middot; ${pending.length} ${pending.length === 1 ? "engineer" : "engineers"} waiting &middot; ${open.length} open ${open.length === 1 ? "project" : "projects"}</p></div>
+      <p class="who">${requests.length} new ${requests.length === 1 ? "request" : "requests"} &middot; ${pending.length} ${pending.length === 1 ? "engineer" : "engineers"} waiting &middot; ${open.length} open ${open.length === 1 ? "project" : "projects"} &middot; <a href="finances.html">Finances</a></p></div>
 
     <section class="dash-section">
       <div class="section-head">
@@ -525,6 +526,7 @@ async function load() {
   document.getElementById("who").textContent = me.companyName ? `${me.displayName}, ${me.companyName}`
     : me.role === "customer" ? me.displayName : `${me.displayName}, ${me.role}`;
   showChatLink(me);
+  document.getElementById("finances-link").hidden = me.role !== "admin";
 
   if (me.role === "customer") {
     const projects = await source.projects("active");
