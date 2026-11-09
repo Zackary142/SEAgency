@@ -3,7 +3,7 @@
 
 /* Must match the "Last updated" version on privacy.html. The API stores which
    version each person saw when they signed up. */
-const PRIVACY_NOTICE_VERSION = "2026-10-21";
+const PRIVACY_NOTICE_VERSION = "2026-11-09";
 
 const form = document.getElementById("auth-form");
 const msg = document.getElementById("auth-msg");

@@ -28,13 +28,16 @@ The name is provisional. To change it:
 index.html              homepage
 signin.html             sign in and create account (clients and engineers)
 dashboard.html          customer or engineer dashboard, depending on who signs in
+chat.html               chat between a project's customer, its engineers and the admin
 privacy.html            privacy notice
 assets/site.config.js   brand name, contact details and the API address
 assets/main.js          fills brand slots, form placeholder, smooth scroll
 assets/api.js           calls to SEAgency-API (session cookie, no tokens in JS)
 assets/signin.js        sign in page
 assets/dashboard.js     both dashboards
+assets/chat.js          chat page (checks for new messages every few seconds while open)
 assets/sample-data.js   made-up data for previewing the dashboards
+assets/sample-chats.js  made-up conversations for previewing the chat page
 assets/styles.css       all styles (dark theme only)
 assets/favicon.svg
 ```
@@ -45,6 +48,9 @@ Accounts are handled by `SEAgency-API`. Until it is deployed, leave `apiUrl`
 empty in `assets/site.config.js`: sign in then offers a preview, and the
 dashboard shows sample data. Switch between the views with
 `dashboard.html?preview=customer`, `customer-empty`, `engineer` or `pending`.
+The chat page has its own preview with example conversations:
+`chat.html?preview=customer`, `engineer` or `admin`. Sending a message there
+gets a pretend reply a few seconds later, and nothing leaves the browser.
 
 To try real accounts before then, run the API with `SITE_DIR` pointing at
 this folder (see the API's README). It serves these pages on its own

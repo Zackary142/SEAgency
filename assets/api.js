@@ -39,6 +39,10 @@ const API = (() => {
     offerSupport: (projectId, message) => request("POST", `/projects/${projectId}/support-offers`, { message }),
     acceptOffer: (projectId, offerId) => request("POST", `/projects/${projectId}/support-offers/${offerId}/accept`),
     declineOffer: (projectId, offerId) => request("POST", `/projects/${projectId}/support-offers/${offerId}/decline`),
+    chats: () => request("GET", "/chats").then(data => data.chats),
+    messages: (projectId, query = "") => request("GET", `/chats/${projectId}/messages${query}`),
+    sendMessage: (projectId, body) => request("POST", `/chats/${projectId}/messages`, { body }).then(data => data.message),
+    markRead: projectId => request("POST", `/chats/${projectId}/read`),
     requestProject: summary => request("POST", "/project-requests", { summary }),
     myRequests: () => request("GET", "/project-requests").then(data => data.requests),
 

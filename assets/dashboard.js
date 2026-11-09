@@ -76,6 +76,26 @@ const roleLabel = role => (role === "primary" ? "Primary" : "Secondary");
 
 const lockIcon = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
 
+/* Chat lives on its own page. In preview it opens the matching example chats. */
+const CHAT_PREVIEWS = { customer: "customer", engineer: "engineer", admin: "admin" };
+const chatHref = projectId => `chat.html${preview ? `?preview=${CHAT_PREVIEWS[preview] || "customer"}` : ""}${projectId ? `#${encodeURIComponent(projectId)}` : ""}`;
+
+// The header's Chat link, with how many messages are waiting.
+async function showChatLink(me) {
+  const link = document.getElementById("chat-link");
+  if (!link) return;
+  const canChat = me.role !== "engineer" || me.engineerStatus === "approved";
+  if (!canChat || (preview && !CHAT_PREVIEWS[preview])) return;
+  link.href = chatHref();
+  link.hidden = false;
+  let unread = 0;
+  try {
+    const chats = preview ? Object.values(SAMPLE_CHATS.unread[preview] || {}) : (await API.chats()).map(c => c.unread);
+    unread = chats.reduce((a, b) => a + b, 0);
+  } catch {}
+  if (unread) link.innerHTML = `Chat <span class="nav-count" aria-label="${unread} unread">${unread}</span>`;
+}
+
 function previewBar() {
   if (!preview) return "";
   const links = Object.entries(PREVIEWS).map(([key, label]) =>
@@ -126,7 +146,7 @@ function customerView(me, project, updates) {
         <ul class="bullets">${latest.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : `<span>Your team hasn't added notes to this update yet.</span>`}
         <div class="actions">
           ${project.stagingUrl ? `<a class="btn btn-primary" href="${esc(project.stagingUrl)}">See it in action <span class="arrow">&rarr;</span></a>` : ""}
-          ${primary ? `<a class="btn btn-quiet" href="mailto:${esc(SITE.email)}">Reply to ${esc(firstName(primary.displayName))}</a>` : ""}
+          ${primary ? `<a class="btn btn-quiet" href="${chatHref(project.id)}">Message ${esc(firstName(primary.displayName))}</a>` : ""}
         </div>
       </div>` : `
       <div class="commit"><span class="dot empty" aria-hidden="true"></span><div><h2>No updates yet</h2><p>As soon as your team starts building, each step they finish shows up here with a short note on what changed.</p></div></div>`;
@@ -150,6 +170,7 @@ function customerView(me, project, updates) {
         <div class="side-block"><span class="eyebrow">Your team</span>${engineers}</div>
         ${next ? `<div class="side-block"><span class="eyebrow">Coming next</span><div class="person"><b>${esc(next.name)}</b><span>Due ${day(next.due)}</span></div></div>` : ""}
         <div class="side-block side-links">
+          ${project.engineers.length ? `<a href="${chatHref(project.id)}">Message your team</a>` : ""}
           <a href="#request" data-action="show-request">Ask for something new</a>
           ${project.repo?.url ? `<a class="quiet-link" href="${esc(project.repo.url)}">View the code on GitHub <span>(for your IT team)</span></a>` : ""}
         </div>
@@ -260,6 +281,7 @@ function engineerCard(p) {
         ${p.lastCommit ? `<div class="last"><span>latest commit</span><span>${esc(p.lastCommit.sha)} ${esc(p.lastCommit.message)}</span></div>` : ""}
         ${(p.offers || []).map(o => offerBlock(p, o)).join("")}
         <div class="row-actions">
+          ${p.status !== "closed" ? `<a class="btn btn-quiet btn-small" href="${chatHref(p.id)}">Message the client</a>` : ""}
           ${p.repo?.url ? `<a class="btn btn-quiet btn-small" href="${esc(p.repo.url)}">Open on GitHub</a>` : ""}
           ${p.lastCommit && p.status !== "closed" ? `<button class="btn btn-quiet btn-small" type="button" data-action="show-notes">Add notes for the customer</button>` : ""}
         </div>
@@ -502,6 +524,7 @@ async function load() {
   }
   document.getElementById("who").textContent = me.companyName ? `${me.displayName}, ${me.companyName}`
     : me.role === "customer" ? me.displayName : `${me.displayName}, ${me.role}`;
+  showChatLink(me);
 
   if (me.role === "customer") {
     const projects = await source.projects("active");
