@@ -380,13 +380,13 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
 .msg-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .chat-day{text-align:center;font-size:.8rem;color:var(--faint);margin-block:6px}
 .chat-day span{padding:2px 10px;border-radius:99px;background:var(--sunken)}
-.msg{justify-self:start;max-width:min(78%,560px);display:grid;gap:4px;padding:10px 14px;border-radius:12px 12px 12px 3px;background:var(--raised);border:1px solid var(--rule)}
-.msg-grouped{margin-top:-8px}
-.msg-me{justify-self:end;border-radius:12px 12px 3px 12px;background:color-mix(in srgb,var(--accent) 22%,var(--raised));border-color:color-mix(in srgb,var(--accent) 35%,var(--rule))}
-.msg-admin{border-color:color-mix(in srgb,var(--branch) 55%,var(--rule))}
+.msg-list .msg{justify-self:start;max-width:min(78%,560px);display:grid;gap:4px;padding:10px 14px;border-radius:12px 12px 12px 3px;background:var(--raised);border:1px solid var(--rule)}
+.msg-list .msg-grouped{margin-top:-8px}
+.msg-list .msg-me{justify-self:end;border-radius:12px 12px 3px 12px;background:color-mix(in srgb,var(--accent) 22%,var(--raised));border-color:color-mix(in srgb,var(--accent) 35%,var(--rule))}
+.msg-list .msg-admin{border-color:color-mix(in srgb,var(--branch) 55%,var(--rule))}
 .msg-meta{font-size:.82rem;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .msg-meta b{color:var(--ink);font-weight:600}
-.msg-me .msg-meta{justify-content:flex-end}
+.msg-list .msg-me .msg-meta{justify-content:flex-end}
 .chat-tag{font-size:.72rem;padding:1px 7px;border-radius:99px;background:var(--sunken);color:var(--muted)}
 .chat-tag-admin{background:color-mix(in srgb,var(--branch) 20%,transparent);color:var(--branch);font-weight:600}
 .msg-body{white-space:pre-wrap;overflow-wrap:anywhere;font-size:1rem;line-height:1.5}
@@ -405,7 +405,7 @@ footer{padding-block:40px 56px;color:var(--muted);font-size:.92rem}
   .chat.is-open .chat-side,.chat:not(.is-open) .chat-main-panel{display:none}
   .chat-back{display:inline-block}
   .chat-head,.chat-msgs{padding-inline:14px}
-  .msg{max-width:88%}
+  .msg-list .msg{max-width:88%}
   .chat-hint{display:none}
   .chat-compose{padding-bottom:14px}
 }
