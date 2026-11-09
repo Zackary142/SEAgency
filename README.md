@@ -29,6 +29,7 @@ index.html              homepage
 signin.html             sign in and create account (clients and engineers)
 dashboard.html          customer or engineer dashboard, depending on who signs in
 chat.html               chat between a project's customer, its engineers and the admin
+finances.html           admins only: money in, the company's cut, expenses and a monthly graph
 privacy.html            privacy notice
 assets/site.config.js   brand name, contact details and the API address
 assets/main.js          fills brand slots, form placeholder, smooth scroll
@@ -36,8 +37,10 @@ assets/api.js           calls to SEAgency-API (session cookie, no tokens in JS)
 assets/signin.js        sign in page
 assets/dashboard.js     both dashboards
 assets/chat.js          chat page (checks for new messages every few seconds while open)
+assets/finances.js      finances page and its graph
 assets/sample-data.js   made-up data for previewing the dashboards
 assets/sample-chats.js  made-up conversations for previewing the chat page
+assets/sample-finances.js  made-up figures for previewing the finances page
 assets/styles.css       all styles (dark theme only)
 assets/favicon.svg
 ```
@@ -51,6 +54,8 @@ dashboard shows sample data. Switch between the views with
 The chat page has its own preview with example conversations:
 `chat.html?preview=customer`, `engineer` or `admin`. Sending a message there
 gets a pretend reply a few seconds later, and nothing leaves the browser.
+The admin Finances page previews with made-up figures at `finances.html`
+(linked from the admin dashboard preview). Changes there aren't saved.
 
 To try real accounts before then, run the API with `SITE_DIR` pointing at
 this folder (see the API's README). It serves these pages on its own

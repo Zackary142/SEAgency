@@ -56,6 +56,15 @@ const API = (() => {
     setProjectStatus: (id, status) => request("PATCH", `/admin/projects/${id}`, { status }),
     setMember: (projectId, engineerId, role) => request("POST", `/admin/projects/${projectId}/members`, { engineerId, role }),
     removeMember: (projectId, engineerId) => request("DELETE", `/admin/projects/${projectId}/members/${engineerId}`),
-    syncProject: projectId => request("POST", `/admin/projects/${projectId}/sync`)
+    syncProject: projectId => request("POST", `/admin/projects/${projectId}/sync`),
+
+    /* Finances (admins only). Amounts are whole pence; dates are YYYY-MM-DD. */
+    finances: ({ from, to } = {}) => request("GET", `/admin/finances${from || to ? `?${new URLSearchParams(Object.entries({ from, to }).filter(([, v]) => v))}` : ""}`),
+    setCut: (projectId, companyCutPercent) => request("PATCH", `/admin/finances/projects/${projectId}`, { companyCutPercent }),
+    addCharge: (projectId, body) => request("POST", `/admin/finances/projects/${projectId}/charges`, body),
+    updateCharge: (chargeId, body) => request("PATCH", `/admin/finances/charges/${chargeId}`, body),
+    removeCharge: chargeId => request("DELETE", `/admin/finances/charges/${chargeId}`),
+    addExpense: body => request("POST", "/admin/finances/expenses", body),
+    removeExpense: expenseId => request("DELETE", `/admin/finances/expenses/${expenseId}`)
   };
 })();
